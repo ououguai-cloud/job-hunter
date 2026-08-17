@@ -7,6 +7,8 @@
 ![Platform](https://img.shields.io/badge/Platform-Win%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)
 ![Lang](https://img.shields.io/badge/Lang-HTML%20%2F%20JS%20%2F%20CSS-orange.svg)
 
+**在线演示（静态模式）**：<https://1e4b6dc70dbf42cb99c63d62be28fe85.app.workbuddy.link> —— 简历分析 / 岗位推荐 / 公司筛选 / 投递看板可直接体验（数据存于浏览器本地）；「一键投递」自动化引擎与 Terranova 背景视频需 Node 服务，请按下方快速开始在本地或服务器部署。
+
 > 面向应届生 / 往届生 / 实习生 / 社招求职者。核心思路：**先分析你的简历 → 按投递赛道匹配出合适的公司与岗位 → 官网直达核对 → 由自动化引擎代填表单投递，验证码由你中继提供，提交前人工确认**。所有数据存本地，不上传任何服务器。
 
 > [!IMPORTANT]
