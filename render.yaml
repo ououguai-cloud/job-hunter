@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: job-hunter
+    runtime: docker
+    healthCheckPath: /api/config
+    envVars:
+      - key: PUBLIC_MODE
+        value: "1"
+      - key: APPLY_HEADLESS
+        value: "1"

@@ -1,0 +1,30 @@
+# 依赖
+node_modules/
+
+# 个人数据（隐私，切勿提交）
+resume/*
+!resume/profile.example.json
+data/applications*.json
+db/jobs_custom.json
+
+# 浏览器持久化登录态（一键投递时生成）
+.profile/
+.profiles/
+
+# Local backups can contain a complete resume profile.
+*.bak
+*.backup
+*.tmp
+
+# 测试产物与截图
+screens/
+
+# 日志与系统文件
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/

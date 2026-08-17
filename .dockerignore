@@ -1,0 +1,10 @@
+.git
+node_modules
+.profile
+.profiles
+resume/profile.json
+resume/*.bak
+data/applications*.json
+db/jobs_custom.json
+screens
+npm-debug.log*

@@ -1,0 +1,48 @@
+{
+  "name": "示例用户",
+  "gender": "男",
+  "birth": "2005.01",
+  "hometown": "示例省",
+  "phone": "请填写手机号",
+  "email": "you@example.com",
+  "wechat": "your_wechat_id",
+  "city": "示例城市",
+  "school": "示例大学",
+  "major": "示例专业",
+  "degree": "本科",
+  "schoolStart": "2023.09",
+  "gradYear": "2027",
+  "gradTime": "2027.06",
+  "rank": "专业排名前30%",
+  "english": "CET-4",
+  "otherLang": "",
+  "certs": ["示例证书1"],
+  "strengths": ["客户沟通", "数据分析"],
+  "expSalary": "8-12K",
+  "expAnnual": "10-15万",
+  "acceptAdjust": "接受",
+  "target": ["销售管培生", "客户经理"],
+  "preferCity": ["示例城市", "北京", "上海"],
+  "skills": ["Python", "数据分析", "客户沟通"],
+  "experiences": [
+    {
+      "org": "示例公司",
+      "role": "销售实习生",
+      "time": "2025.06-2025.09",
+      "desc": "负责客户拓展与维护，完成月度业绩目标"
+    }
+  ],
+  "campus": [
+    {
+      "org": "校学生会",
+      "role": "干事",
+      "time": "2023.10-2024.06",
+      "desc": "参与策划校级活动"
+    }
+  ],
+  "selfIntro": "这是我的一份示例自我介绍，请替换为你的真实内容。",
+  "resumeFiles": {
+    "pdf": "",
+    "html": ""
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "job-hunter",
+  "version": "1.0.0",
+  "description": "职聘通 JobHunter —— 简历分析 · 岗位推荐 · 简历优化 · 官网直达 · 一键投递 综合求职平台（开源版）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "install:all": "npm install",
+    "test": "node tools/e2e-regression.js && node tools/e2e-full.js && node tools/integration-check.js"
+  },
+  "keywords": [
+    "job-hunting",
+    "resume",
+    "job-recommendation",
+    "求职",
+    "简历",
+    "一键投递",
+    "招聘"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer-core": "^23.11.1",
+    "ws": "^8.18.0"
+  }
+}
