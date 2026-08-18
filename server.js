@@ -401,7 +401,7 @@ app.use('/data/applications.json', (_req, res) => res.status(404).end());
 app.use('/db/jobs_custom.json', (_req, res) => res.status(404).end());
 app.use(express.static(ROOT));
 
-app.get('/api/config', (_req, res) => res.json({ publicMode: PUBLIC_MODE }));
+app.get('/api/config', (_req, res) => res.json({ publicMode: PUBLIC_MODE, browserAvailable: !!detectBrowser() }));
 
 // Public visitors must never receive the server operator's resume. They start
 // from the same redacted example, then keep their changes in localStorage.

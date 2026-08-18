@@ -28,3 +28,7 @@ Thumbs.db
 # 编辑器
 .vscode/
 .idea/
+
+# 本机桌面启动器（个人路径，不入库）
+*.bat
+*.vbs

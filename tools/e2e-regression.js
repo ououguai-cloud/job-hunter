@@ -161,20 +161,27 @@ const readTiersInList = (page) => page.$$eval('#jobList .job-card', cards => {
   ok(diag.hasPhoneIssue, '检测到手机号占位/缺失问题');
   ok(!!diag.health && +diag.health <= 96, `健康度评分生成（${diag.health}）`);
 
-  /* ---------- 7. 完整画像时的诊断收敛 ---------- */
-  console.log('▶ 7. 补全画像后诊断项收敛');
+  /* ---------- 7. 完整简历文本时的诊断收敛 ---------- */
+  // v2 行为变更：runOptimize() 基于"当前编辑区文本"实时提取画像（extractProfile），
+  // 而非 Tab1 的 JH.profile —— 这里用一份字段齐全的简历文本验证诊断项收敛
+  console.log('▶ 7. 编辑区填入完整简历后诊断项收敛');
   await page.evaluate(() => {
-    JH.profile = { ...JH.profile, name: '测试用户', phone: '13800000000', email: 'test@example.com', wechat: 'test_wechat', resumePdfPath: 'D:/resume.pdf', selfIntro: '具备客户沟通与需求挖掘能力，拥有地推陌拜与私域运营实战经验。', rank: '专业前30%', target: ['销售管培生'], city: '西安' };
-    persistProfile(); runOptimize();
+    const fullResume = [
+      '姓名：李明华  性别：男  出生年月：2003.05',
+      '籍贯：陕西西安  现居城市：西安  电话：13800001234  邮箱：liminghua2026@163.com  微信：lmh2026wx',
+      '西安外国语大学  专业：市场营销  本科  2026届  2022.09-2026.06',
+      '英语水平：CET-6  其他外语：日语N2  技能证书：初级会计、普通话二甲',
+      '求职意向：销售管培生  期望薪资：8000-10000元/月  意向城市：西安  接受调剂：是',
+      '个人评价：具备客户沟通与需求挖掘能力，地推陌拜累计转化客户326人，私域社群运营3个月复购率提升45%。'
+    ].join('\n');
+    $('optText').value = fullResume;
+    runOptimize();
   });
   const diag2 = await page.evaluate(() => ({
     n: document.querySelectorAll('#optReport .diag-item').length,
-    hasComplete: document.querySelector('#optReport').textContent.includes('个人信息完整'),
   }));
-  // 画像补全后个人信息诊断区应显示"完整"（正文问题卡片仍存在）
-  const reportText = await page.evaluate(() => document.querySelector('#optReport').textContent);
-  const hasCompleteBadge = reportText.includes('✅ 个人信息完整') || diag2.n < diag.n;
-  ok(hasCompleteBadge, `补全画像后信息缺漏项收敛（diag 卡片 ${diag2.n} 张）`);
+  // 字段齐全的简历文本应显著减少个人信息缺漏诊断（正文问题卡片仍可能存在）
+  ok(diag2.n < diag.n, `完整简历文本后诊断项收敛（diag 卡片 ${diag.n} → ${diag2.n} 张）`);
 
   console.log(`\n========== 回归结果：${pass} 通过 / ${fail} 失败 ==========`);
   await browser.close();

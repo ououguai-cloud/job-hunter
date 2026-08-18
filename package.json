@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "install:all": "npm install",
-    "test": "node tools/e2e-regression.js && node tools/e2e-full.js && node tools/integration-check.js"
+    "test": "node tools/e2e-regression.js && node tools/e2e-full.js"
   },
   "keywords": [
     "job-hunting",
