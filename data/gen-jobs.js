@@ -153,6 +153,227 @@ const REQ_BY_ROLE = {
   ],
 };
 
+// ---------- 供应链类职责/要求 ----------
+RESP_BY_ROLE["供应链"] = [
+  "负责供应链计划、采购与库存管理，保障供应稳定与成本最优",
+  "协同供应商与内部各部门，跟进订单交付与异常闭环处理",
+  "分析供应数据与成本结构，推动供应链流程与效率持续改善",
+];
+REQ_BY_ROLE["供应链"] = [
+  "本科及以上学历，物流管理、供应链管理、工业工程等专业优先",
+  "熟练使用Office与ERP系统，数据处理与逻辑分析能力佳",
+  "沟通协调能力强，细致耐心，具备一定抗压能力",
+  "有供应链、采购或物流相关实习经验者优先",
+];
+
+// ============================================================
+// 岗位两级细分体系：大类 role（8类）+ 细分 subRole
+// 技术/设计/产品/运营/市场/销售/供应链/职能 → 具体细分方向
+// ============================================================
+const SUBROLE_RULES = [
+  // —— 技术类 ——
+  [/大模型|LLM|AIGC|生成式|机器学习|深度学习|人工智能|算法|自动驾驶|智驾|感知|SLAM|NLP|自然语言|生物信息/, "算法/AI"],
+  [/数据仓库|大数据|数据工程|ETL|BI|数仓/, "数据/大数据"],
+  [/数据分析|数据挖掘/, "数据分析"],
+  [/前端|Web|H5|小程序/, "前端开发"],
+  [/Android|iOS|移动|客户端|App|鸿蒙|跨端/, "移动开发"],
+  [/测试|质量|QA|自动化测试/, "测试/质量"],
+  [/运维|SRE|DevOps|云原生|K8s|虚拟化|云计算/, "运维/云计算"],
+  [/嵌入式|固件|硬件|电子|BMS|AUTOSAR|ECU|单片机|电驱|电池/, "嵌入式/硬件"],
+  [/芯片|IC设计|半导体|封装|集成电路|光刻|晶圆/, "芯片/半导体"],
+  [/通信|5G|基站|射频|天线|网络/, "网络/通信"],
+  [/安全|渗透|漏洞/, "网络安全"],
+  [/机械|工艺|制造|工业|IE|精益|整车|车身|底盘|结构|模具|轴承|齿轮|液压/, "机械/工艺"],
+  [/电气|自动化|PLC|电力/, "电气/自动化"],
+  [/药物|临床|CRA|医学|生物|医药|药理|基因|细胞|试剂|疫苗/, "医药研发"],
+  [/后端|服务端|软件|Java|C\+\+|Go|Python|全栈|架构|开发工程师/, "后端开发"],
+  // —— 设计类 ——
+  [/UI|UX|交互|体验设计/, "UI/UX"],
+  [/视觉|平面|创意|美工|插画/, "视觉/平面"],
+  [/游戏|原画|特效|3D|建模|美术|场景|角色|动效/, "游戏美术"],
+  [/工业设计|造型|CMF|结构设计/, "工业设计"],
+  [/品牌设计|包装|营销设计/, "品牌设计"],
+  // —— 产品类 ——
+  [/产品经理|产品策划|产品岗|产品研发/, "产品经理"],
+  [/用户研究|消费者洞察|市场研究|调研/, "用户研究"],
+  // —— 运营类 ——
+  [/电商|店铺|独立站|跨境|平台运营|天猫|京东/, "电商运营"],
+  [/直播|短视频|内容|社区|社群|新媒体|私域|MCN/, "内容/新媒体"],
+  [/用户|活动|会员|品类|游戏运营|增长/, "用户/活动运营"],
+  // —— 市场类 ——
+  [/品牌|公关|PR|广告|营销策划|市场专员|营销/, "品牌/公关"],
+  [/数字|投放|SEO|SEM|效果|信息流/, "数字营销"],
+  [/市场调研|洞察|行业研究|行研/, "市场调研"],
+  [/海外|外贸|国际|出海|英语/, "海外市场"],
+  // —— 销售类 ——
+  [/大客户|KA|对公|客户经理/, "大客户/KA"],
+  [/渠道|经销|终端|门店销售/, "渠道/经销"],
+  [/解决方案|售前|方案销售/, "解决方案销售"],
+  [/海外销售|外销|国际贸易/, "海外销售"],
+  [/代表|销售专员|商务|BD|销售工程师|销售管培|销售经理/, "销售代表"],
+  // —— 供应链类 ——
+  [/采购|供应商|SQE|寻源|cost down/, "采购"],
+  [/物流|仓储|运输|快递|配送|关务|货代|国际物流/, "物流/仓储"],
+  [/计划|产销|供应链管理|需求预测|供应计划/, "计划/产销"],
+  // —— 职能类 ——
+  [/人力|HR|招聘|薪酬|绩效|培训|组织发展/, "人力资源"],
+  [/财务|会计|税务|审计|出纳|资金/, "财务/审计"],
+  [/法务|法律|合规|风控|风险管理/, "法务/风控"],
+  [/行政|文员|助理|秘书|前台/, "行政"],
+  [/投资|投研|研究助理|估值|战略|经营分析|造价|合约|招采|成本管理|投资研究|投资拓展|工程管理/, "投研/造价"],
+];
+const SUBROLE_DEFAULT = {
+  "技术": "研发/其他", "设计": "设计综合", "产品": "产品综合", "运营": "运营综合",
+  "市场": "市场综合", "销售": "销售/商务", "供应链": "供应链综合", "职能": "职能综合",
+};
+function subRoleOf(title, role) {
+  for (const [re, sub] of SUBROLE_RULES) if (re.test(title)) return sub;
+  return SUBROLE_DEFAULT[role] || "综合";
+}
+
+// ============================================================
+// 公司类型两级归类：88个杂乱类型 → 7大类别（ctypeCat）+ 原值细分
+// ============================================================
+const CTYPE_CAT = {
+  "央企": "央企/国企", "国企": "央企/国企", "国有企业": "央企/国企", "地方国企": "央企/国企",
+  "央企子公司": "央企/国企", "国防工业": "央企/国企", "军工企业": "央企/国企",
+  "国有大行": "金融机构", "上市银行": "金融机构", "股份制银行": "金融机构", "城商行": "金融机构",
+  "农商行": "金融机构", "互联网银行": "金融机构", "上市券商": "金融机构", "证券公司": "金融机构",
+  "券商": "金融机构", "基金公司": "金融机构", "信托公司": "金融机构", "保险公司": "金融机构",
+  "保险集团": "金融机构", "金融科技": "金融机构", "综合金融": "金融机构", "投资机构": "金融机构",
+  "外企": "外资企业", "跨国企业": "外资企业", "世界500强": "外资企业",
+  "上市公司": "上市公司",
+  "制造龙头": "行业龙头", "地产龙头": "行业龙头", "食品龙头": "行业龙头", "物流龙头": "行业龙头",
+  "旅游龙头": "行业龙头", "建筑龙头": "行业龙头", "餐饮龙头": "行业龙头", "半导体龙头": "行业龙头",
+  "零部件龙头": "行业龙头", "新能源龙头": "行业龙头", "农业龙头": "行业龙头", "航空龙头": "行业龙头",
+  "港口运营": "行业龙头",
+  "民营企业": "民营/创新企业", "民企": "民营/创新企业", "民企龙头": "民营/创新企业",
+  "独角兽": "民营/创新企业", "互联网独角兽": "民营/创新企业", "互联网大厂": "民营/创新企业",
+  "硬科技企业": "民营/创新企业", "专精特新": "民营/创新企业", "造车新势力": "民营/创新企业",
+  "智能驾驶企业": "民营/创新企业", "MCN机构": "民营/创新企业",
+};
+function ctypeCatOf(ctype) { return CTYPE_CAT[ctype] || "专业领域企业"; }
+
+// ============================================================
+// 高细分具体岗位池（每家公司按hash额外补充0-1个具体岗位）
+// ============================================================
+const SPECIFIC_JOBS = {
+  "技术": [
+    { title: "AI算法工程师（大模型方向）", sub: "算法/AI", degree: "硕士及以上", kw: ["大模型", "LLM", "PyTorch", "预训练", "微调"], desc: "负责大语言模型预训练/微调/对齐与推理优化，落地AIGC业务场景。" },
+    { title: "AIGC算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["AIGC", "扩散模型", "文生图", "多模态"], desc: "负责生成式AI模型的研发与产品化落地。" },
+    { title: "NLP算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["NLP", "文本", "语义", "Transformer"], desc: "负责自然语言理解、文本生成与语义检索算法研发。" },
+    { title: "CV算法工程师（计算机视觉）", sub: "算法/AI", degree: "硕士及以上", kw: ["计算机视觉", "目标检测", "图像分割", "深度学习"], desc: "负责视觉感知算法研发，应用于质检、安防、自动驾驶等场景。" },
+    { title: "语音算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["语音识别", "TTS", "声学模型", "降噪"], desc: "负责语音识别、语音合成与声学信号处理算法研发。" },
+    { title: "推荐算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["推荐系统", "排序模型", "召回", "特征工程"], desc: "负责推荐系统的召回、排序与机制设计，提升转化与留存。" },
+    { title: "搜索算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["搜索", "相关性", "Query理解", "排序"], desc: "负责搜索引擎相关性、Query理解与排序算法优化。" },
+    { title: "通信算法工程师", sub: "网络/通信", degree: "硕士及以上", kw: ["通信", "信道估计", "编解码", "信号处理"], desc: "负责无线通信物理层算法设计与仿真验证。" },
+    { title: "SLAM算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["SLAM", "点云", "激光雷达", "定位建图"], desc: "负责机器人/自动驾驶的定位建图算法研发。" },
+    { title: "自动驾驶规划控制算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["规划控制", "轨迹规划", "MPC", "决策"], desc: "负责智驾行为决策与轨迹规划控制算法研发。" },
+    { title: "强化学习算法工程师", sub: "算法/AI", degree: "硕士及以上", kw: ["强化学习", "马尔可夫决策", "智能体"], desc: "负责强化学习算法在业务决策场景的研发与落地。" },
+    { title: "大数据开发工程师", sub: "数据/大数据", degree: "本科及以上", kw: ["Spark", "Flink", "Hadoop", "数据湖"], desc: "负责大数据平台的离线/实时数据管道开发与优化。" },
+    { title: "数据仓库工程师", sub: "数据/大数据", degree: "本科及以上", kw: ["数仓", "维度建模", "Hive", "ETL"], desc: "负责数据仓库建模、ETL开发与数据治理。" },
+    { title: "Java后端开发工程师", sub: "后端开发", degree: "本科及以上", kw: ["Java", "Spring", "微服务", "MySQL"], desc: "负责核心业务系统的Java服务端开发与架构优化。" },
+    { title: "Golang后端开发工程师", sub: "后端开发", degree: "本科及以上", kw: ["Go", "高并发", "分布式", "微服务"], desc: "负责高并发分布式系统的Golang开发。" },
+    { title: "C++开发工程师（基础架构）", sub: "后端开发", degree: "本科及以上", kw: ["C++", "性能优化", "底层架构", "多线程"], desc: "负责底层基础组件与高性能系统的C++研发。" },
+    { title: "音视频开发工程师", sub: "后端开发", degree: "本科及以上", kw: ["音视频", "编解码", "WebRTC", "流媒体"], desc: "负责音视频采集、编解码与实时传输链路开发。" },
+    { title: "鸿蒙应用开发工程师", sub: "移动开发", degree: "本科及以上", kw: ["鸿蒙", "ArkTS", "HarmonyOS", "终端"], desc: "负责HarmonyOS原生应用开发与生态适配。" },
+    { title: "Android开发工程师", sub: "移动开发", degree: "本科及以上", kw: ["Android", "Kotlin", "性能优化", "Framework"], desc: "负责Android客户端功能开发与性能体验优化。" },
+    { title: "iOS开发工程师", sub: "移动开发", degree: "本科及以上", kw: ["iOS", "Swift", "ObjC", "性能优化"], desc: "负责iOS客户端架构与功能研发。" },
+    { title: "小程序开发工程师", sub: "前端开发", degree: "本科及以上", kw: ["小程序", "微信生态", "跨端", "Taro"], desc: "负责微信/支付宝小程序开发与跨端方案落地。" },
+    { title: "前端性能优化工程师", sub: "前端开发", degree: "本科及以上", kw: ["性能优化", "首屏", "SSR", "Web Vitals"], desc: "负责Web前端性能监控与优化体系建设。" },
+    { title: "DevOps工程师", sub: "运维/云计算", degree: "本科及以上", kw: ["CI/CD", "Jenkins", "Docker", "自动化"], desc: "负责研发效能工具链与持续交付体系建设。" },
+    { title: "SRE稳定性工程师", sub: "运维/云计算", degree: "本科及以上", kw: ["SRE", "可观测性", "容灾", "限流降级"], desc: "负责线上服务稳定性保障与应急响应体系建设。" },
+    { title: "Kubernetes研发工程师", sub: "运维/云计算", degree: "本科及以上", kw: ["Kubernetes", "容器", "云原生", "Go"], desc: "负责容器平台的研发与大规模集群运维。" },
+    { title: "安全工程师（渗透测试）", sub: "网络安全", degree: "本科及以上", kw: ["渗透测试", "漏洞", "红队", "攻防"], desc: "负责业务系统渗透测试与安全漏洞挖掘修复。" },
+    { title: "数据安全工程师", sub: "网络安全", degree: "本科及以上", kw: ["数据安全", "隐私合规", "加密", "脱敏"], desc: "负责数据分类分级、加密与隐私合规体系建设。" },
+    { title: "嵌入式软件工程师（AUTOSAR）", sub: "嵌入式/硬件", degree: "本科及以上", kw: ["AUTOSAR", "嵌入式", "车载", "C语言"], desc: "负责汽车电子嵌入式软件架构设计与开发。" },
+    { title: "FPGA开发工程师", sub: "嵌入式/硬件", degree: "本科及以上", kw: ["FPGA", "Verilog", "时序", "硬件加速"], desc: "负责FPGA逻辑设计、仿真与硬件加速方案。" },
+    { title: "数字IC设计工程师", sub: "芯片/半导体", degree: "硕士及以上", kw: ["数字IC", "Verilog", "前端设计", "综合"], desc: "负责数字芯片前端设计与验证。" },
+    { title: "模拟IC设计工程师", sub: "芯片/半导体", degree: "硕士及以上", kw: ["模拟IC", "运放", "ADC", "版图"], desc: "负责模拟芯片电路设计与仿真验证。" },
+    { title: "芯片验证工程师", sub: "芯片/半导体", degree: "硕士及以上", kw: ["UVM", "验证", "SystemVerilog", "覆盖率"], desc: "负责芯片功能验证环境搭建与用例开发。" },
+    { title: "射频工程师", sub: "网络/通信", degree: "本科及以上", kw: ["射频", "RF", "天线", "阻抗匹配"], desc: "负责射频电路与天线设计调试。" },
+    { title: "自动化测试工程师", sub: "测试/质量", degree: "本科及以上", kw: ["自动化测试", "Selenium", "接口测试", "Python"], desc: "负责自动化测试框架开发与质量门禁建设。" },
+    { title: "性能测试工程师", sub: "测试/质量", degree: "本科及以上", kw: ["性能测试", "压测", "JMeter", "容量评估"], desc: "负责系统性能压测、容量规划与瓶颈定位。" },
+  ],
+  "设计": [
+    { title: "视觉设计师", sub: "视觉/平面", degree: "本科及以上", kw: ["视觉", "平面", "品牌", "PS"], desc: "负责品牌与营销物料的视觉设计输出。" },
+    { title: "交互设计师", sub: "UI/UX", degree: "本科及以上", kw: ["交互", "原型", "用户流程", "Figma"], desc: "负责产品交互框架与用户流程设计。" },
+    { title: "动效设计师", sub: "游戏美术", degree: "本科及以上", kw: ["动效", "AE", "C4D", "动画"], desc: "负责产品与营销场景的动效设计。" },
+    { title: "游戏原画师", sub: "游戏美术", degree: "本科及以上", kw: ["原画", "角色", "场景", "美术"], desc: "负责游戏角色/场景概念原画设计。" },
+    { title: "游戏特效设计师", sub: "游戏美术", degree: "本科及以上", kw: ["特效", "Unity", "粒子", "UE"], desc: "负责游戏技能与场景特效制作。" },
+    { title: "3D建模师", sub: "游戏美术", degree: "本科及以上", kw: ["3D建模", "Blender", "Maya", "ZBrush"], desc: "负责三维资产建模与材质渲染。" },
+    { title: "工业设计师", sub: "工业设计", degree: "本科及以上", kw: ["工业设计", "CMF", "造型", "手绘"], desc: "负责硬件产品的外观造型与CMF设计。" },
+    { title: "包装设计师", sub: "品牌设计", degree: "本科及以上", kw: ["包装", "平面", "结构", "印刷"], desc: "负责产品包装的视觉与结构设计。" },
+    { title: "插画师", sub: "视觉/平面", degree: "本科及以上", kw: ["插画", "手绘", "风格", "商业插画"], desc: "负责品牌与内容的商业插画创作。" },
+    { title: "电商设计师", sub: "视觉/平面", degree: "本科及以上", kw: ["电商", "详情页", "banner", "大促"], desc: "负责电商平台店铺视觉与活动页设计。" },
+    { title: "用户体验研究员", sub: "UI/UX", degree: "硕士及以上", kw: ["用户研究", "可用性测试", "访谈", "数据分析"], desc: "负责用户研究与体验度量，驱动设计决策。" },
+  ],
+  "产品": [
+    { title: "AI产品经理", sub: "产品经理", degree: "本科及以上", kw: ["AI", "大模型", "Prompt", "产品落地"], desc: "负责AI产品规划与场景落地，连接算法与业务。" },
+    { title: "数据产品经理", sub: "产品经理", degree: "本科及以上", kw: ["数据产品", "BI", "指标体系", "SQL"], desc: "负责数据平台与指标体系的产品化建设。" },
+    { title: "B端产品经理", sub: "产品经理", degree: "本科及以上", kw: ["B端", "SaaS", "企业服务", "流程"], desc: "负责企业级产品规划与客户需求转化。" },
+    { title: "策略产品经理", sub: "产品经理", degree: "本科及以上", kw: ["策略", "推荐", "流量", "实验"], desc: "负责推荐/流量策略的产品设计与实验迭代。" },
+    { title: "增长产品经理", sub: "产品经理", degree: "本科及以上", kw: ["增长", "裂变", "留存", "AARRR"], desc: "负责用户增长链路设计与增长实验。" },
+    { title: "智能座舱产品经理", sub: "产品经理", degree: "本科及以上", kw: ["智能座舱", "汽车", "HMI", "车载"], desc: "负责智能座舱产品规划与体验设计。" },
+    { title: "供应链产品经理", sub: "产品经理", degree: "本科及以上", kw: ["供应链", "WMS", "TMS", "ERP"], desc: "负责供应链系统产品的规划与落地。" },
+    { title: "商业分析师", sub: "用户研究", degree: "本科及以上", kw: ["商业分析", "经营分析", "SQL", "财务模型"], desc: "负责业务经营分析与策略支持。" },
+  ],
+  "运营": [
+    { title: "内容运营", sub: "内容/新媒体", degree: "本科及以上", kw: ["内容", "文案", "选题", "公众号"], desc: "负责内容选题、生产与分发，提升内容消费指标。" },
+    { title: "短视频运营", sub: "内容/新媒体", degree: "本科及以上", kw: ["短视频", "抖音", "快手", "剪辑"], desc: "负责短视频账号运营与内容增长。" },
+    { title: "直播运营", sub: "内容/新媒体", degree: "本科及以上", kw: ["直播", "主播", "货盘", "GMV"], desc: "负责直播间运营策划与GMV增长。" },
+    { title: "私域运营", sub: "内容/新媒体", degree: "本科及以上", kw: ["私域", "社群", "企微", "复购"], desc: "负责私域用户池搭建与复购转化运营。" },
+    { title: "用户运营", sub: "用户/活动运营", degree: "本科及以上", kw: ["用户分层", "留存", "召回", "生命周期"], desc: "负责用户分层运营与生命周期管理。" },
+    { title: "跨境电商运营", sub: "电商运营", degree: "本科及以上", kw: ["跨境电商", "亚马逊", "TikTok", "独立站"], desc: "负责跨境平台店铺运营与海外市场增长。" },
+    { title: "游戏社区运营", sub: "用户/活动运营", degree: "本科及以上", kw: ["游戏", "社区", "玩家", "UGC"], desc: "负责游戏社区生态与玩家活动运营。" },
+    { title: "会员运营", sub: "用户/活动运营", degree: "本科及以上", kw: ["会员", "权益", "积分", "LTV"], desc: "负责会员体系设计与权益运营。" },
+  ],
+  "市场": [
+    { title: "品牌经理", sub: "品牌/公关", degree: "本科及以上", kw: ["品牌", "定位", "整合营销", "campaign"], desc: "负责品牌策略与整合营销campaign策划执行。" },
+    { title: "数字营销经理", sub: "数字营销", degree: "本科及以上", kw: ["数字营销", "投放", "ROI", "渠道"], desc: "负责数字渠道投放策略与ROI优化。" },
+    { title: "效果广告优化师", sub: "数字营销", degree: "本科及以上", kw: ["信息流", "优化", "出价", "素材"], desc: "负责效果广告投放优化与素材迭代。" },
+    { title: "SEO/SEM专员", sub: "数字营销", degree: "本科及以上", kw: ["SEO", "SEM", "关键词", "搜索"], desc: "负责搜索流量获取与优化。" },
+    { title: "公关经理（PR）", sub: "品牌/公关", degree: "本科及以上", kw: ["公关", "媒体", "舆情", "传播"], desc: "负责媒体关系、传播项目与舆情管理。" },
+    { title: "海外营销经理（出海）", sub: "海外市场", degree: "本科及以上", kw: ["出海", "海外", "本地化", "英语"], desc: "负责海外市场品牌与增长营销。" },
+    { title: "市场洞察分析师", sub: "市场调研", degree: "本科及以上", kw: ["市场研究", "数据", "竞品", "洞察"], desc: "负责行业与竞品研究，输出市场洞察。" },
+  ],
+  "销售": [
+    { title: "大客户经理（KA）", sub: "大客户/KA", degree: "本科及以上", kw: ["KA", "大客户", "谈判", "方案"], desc: "负责重点客户开拓与年度合作经营。" },
+    { title: "渠道销售经理", sub: "渠道/经销", degree: "本科及以上", kw: ["渠道", "经销商", "覆盖", "终端"], desc: "负责区域渠道体系搭建与经销商管理。" },
+    { title: "解决方案销售", sub: "解决方案销售", degree: "本科及以上", kw: ["解决方案", "售前", "ToB", "签约"], desc: "负责ToB解决方案销售与项目型签约。" },
+    { title: "SaaS销售经理", sub: "销售代表", degree: "本科及以上", kw: ["SaaS", "订阅", "续约", "ToB"], desc: "负责SaaS产品新客开拓与续约增长。" },
+    { title: "海外销售经理", sub: "海外销售", degree: "本科及以上", kw: ["海外", "外贸", "英语", "展会"], desc: "负责海外市场客户开发与订单落地。" },
+    { title: "医疗器械销售代表", sub: "销售代表", degree: "本科及以上", kw: ["医疗器械", "医院", "学术", "渠道"], desc: "负责区域医院与经销商渠道的器械销售。" },
+    { title: "商务拓展经理（BD）", sub: "销售代表", degree: "本科及以上", kw: ["BD", "合作", "谈判", "资源"], desc: "负责生态合作伙伴拓展与联合项目落地。" },
+  ],
+  "供应链": [
+    { title: "采购工程师", sub: "采购", degree: "本科及以上", kw: ["采购", "寻源", "成本", "供应商"], desc: "负责物料寻源、比价与供应商管理。" },
+    { title: "供应商质量工程师（SQE）", sub: "采购", degree: "本科及以上", kw: ["SQE", "质量", "8D", "审核"], desc: "负责供应商质量体系审核与来料问题闭环。" },
+    { title: "物料计划员", sub: "计划/产销", degree: "本科及以上", kw: ["物料计划", "MRP", "齐套", "库存"], desc: "负责物料需求计划与齐套管理。" },
+    { title: "产销协同计划员", sub: "计划/产销", degree: "本科及以上", kw: ["S&OP", "产销", "预测", "排产"], desc: "负责产销协同与排产计划管理。" },
+    { title: "物流规划工程师", sub: "物流/仓储", degree: "本科及以上", kw: ["物流规划", "仓网", "线路", "成本"], desc: "负责仓储网络与运输线路规划设计。" },
+    { title: "关务专员", sub: "物流/仓储", degree: "本科及以上", kw: ["关务", "报关", "退税", "合规"], desc: "负责进出口报关与贸易合规管理。" },
+    { title: "国际物流专员", sub: "物流/仓储", degree: "本科及以上", kw: ["国际物流", "海运", "货代", "英语"], desc: "负责国际运输方案与货代管理。" },
+    { title: "需求计划分析师", sub: "计划/产销", degree: "本科及以上", kw: ["需求预测", "统计", "S&OP", "数据"], desc: "负责需求预测建模与计划准确性提升。" },
+  ],
+  "职能": [
+    { title: "HRBP", sub: "人力资源", degree: "本科及以上", kw: ["HRBP", "组织", "招聘", "员工关系"], desc: "作为业务伙伴负责人力资源方案落地。" },
+    { title: "薪酬绩效专员", sub: "人力资源", degree: "本科及以上", kw: ["薪酬", "绩效", "OKR", "数据"], desc: "负责薪酬核算与绩效体系运营。" },
+    { title: "招聘专员", sub: "人力资源", degree: "本科及以上", kw: ["招聘", "面试", "渠道", "mapping"], desc: "负责招聘渠道运营与人才寻访。" },
+    { title: "成本会计", sub: "财务/审计", degree: "本科及以上", kw: ["成本", "核算", "ERP", "存货"], desc: "负责成本核算与存货分析。" },
+    { title: "税务专员", sub: "财务/审计", degree: "本科及以上", kw: ["税务", "申报", "筹划", "发票"], desc: "负责税务申报与税务筹划支持。" },
+    { title: "审计专员", sub: "财务/审计", degree: "本科及以上", kw: ["审计", "内控", "底稿", "CPA"], desc: "负责内控审计与专项审计执行。" },
+    { title: "法务专员", sub: "法务/风控", degree: "本科及以上", kw: ["法务", "合同", "合规", "法律"], desc: "负责合同审核与法律合规支持。" },
+    { title: "风控专员", sub: "法务/风控", degree: "本科及以上", kw: ["风控", "授信", "贷后", "模型"], desc: "负责信用风险识别与贷后管控。" },
+    { title: "战略投资分析师", sub: "投研/造价", degree: "硕士及以上", kw: ["战略", "投资", "行研", "财务模型"], desc: "负责行业研究与投资分析支持。" },
+    { title: "经营分析专员", sub: "投研/造价", degree: "本科及以上", kw: ["经营分析", "预算", "BI", "复盘"], desc: "负责经营数据复盘与预算管理。" },
+    { title: "造价工程师", sub: "投研/造价", degree: "本科及以上", kw: ["造价", "预算", "工程", "计量"], desc: "负责工程造价编制与审核。" },
+  ],
+};
+
+// ---------- 预发布岗位月份池 ----------
+const PRE_MONTHS = ["2026年9月", "2026年10月", "2026年11月", "2026年12月", "2027年春季校招", "2027年3月"];
+
 // ---------- 行业岗位模板 ----------
 const JOB_TEMPLATES = {
   "互联网/科技": [
@@ -279,6 +500,15 @@ const JOB_TEMPLATES = {
     { title: "饲料配方师", role: "技术", degree: "本科及以上", kw: ["饲料", "配方", "营养", "畜牧", "动物科学"], desc: "负责饲料配方设计与营养研究。" },
     { title: "大宗贸易采购", role: "职能", degree: "本科及以上", kw: ["大宗", "贸易", "采购", "农产品", "期货"], desc: "负责农产品大宗贸易与采购。" }
   ],
+  "外企/跨国": [
+    { title: "Management Trainee 管培生", role: "市场", degree: "本科及以上", kw: ["管培生", "MT", "轮岗", "英语", "领导力"], desc: "跨国企业管理培训生项目，轮岗培养未来管理者，全英文工作环境。" },
+    { title: "软件开发工程师（外企）", role: "技术", degree: "本科及以上", kw: ["Java", "C#", "英语", "敏捷", "Scrum"], desc: "参与跨国企业全球产品研发，敏捷开发流程，国际化技术团队协作。" },
+    { title: "供应链管理专员", role: "职能", degree: "本科及以上", kw: ["供应链", "英语", "计划", "SAP", "国际物流"], desc: "负责亚太区供应链计划与协调，全球采购与物流支持。" },
+    { title: "市场品牌专员", role: "市场", degree: "本科及以上", kw: ["品牌", "市场", "英语", "campaign", "数字营销"], desc: "负责品牌市场活动策划执行，跨区域市场协作。" },
+    { title: "财务分析员 FA", role: "职能", degree: "本科及以上", kw: ["财务", "分析", "英语", "FP&A", "报表"], desc: "负责业务财务分析与预算管理，支持管理决策。" },
+    { title: "销售工程师", role: "销售", degree: "本科及以上", kw: ["销售", "技术", "英语", "B2B", "客户"], desc: "负责工业/科技产品的技术销售与客户方案支持。" },
+    { title: "研发工程师（R&D）", role: "技术", degree: "硕士及以上", kw: ["研发", "英语", "创新", "专利", "实验"], desc: "参与全球研发项目，前沿技术研究与产品创新。" }
+  ],
   "航天/军工": [
     { title: "飞行器总体设计工程师", role: "技术", degree: "硕士及以上", kw: ["飞行器", "总体", "设计", "空气动力", "结构"], desc: "负责飞行器总体方案设计与论证。" },
     { title: "制导控制工程师", role: "技术", degree: "硕士及以上", kw: ["制导", "控制", "导航", "飞控", "算法"], desc: "负责飞行器制导与控制算法研发。" },
@@ -294,7 +524,7 @@ const INDUSTRY_COLORS = {
   "能源/公用": "#2c3e50", "通信/运营商": "#0984e3", "地产/建筑": "#d35400",
   "交通/物流": "#2980b9", "文娱/游戏": "#8e44ad", "教育/培训": "#f39c12",
   "半导体/电子": "#16a085", "餐饮/食品": "#e17055", "旅游/航空": "#00cec9",
-  "农林牧渔": "#6ab04c", "航天/军工": "#535c68"
+  "农林牧渔": "#6ab04c", "航天/军工": "#535c68", "外企/跨国": "#6c5ce7"
 };
 
 // ---------- 确定性伪随机 ----------
@@ -334,10 +564,24 @@ const tierOf = (ctype, scale) => {
   if (/股份|城商|农商/.test(c)) return n >= 20000 ? '大厂' : (n >= 3000 ? '中厂' : '小厂');
   return n >= 10000 ? '大厂' : (n >= 1000 ? '中厂' : '小厂');
 };
+// ---------- 笔试要求（确定性生成） ----------
+// 值: '有笔试' / '无笔试' / '不限'
+// 规则: 大厂 + 技术岗 → 高概率有笔试；小厂 + 非技术岗 → 低概率
+function hasExamOf(company, title, tier, role) {
+  const h = hash(company + '|exam|' + title);
+  const baseRate = tier === '大厂' ? 0.55 : (tier === '中厂' ? 0.35 : 0.15);
+  const techBonus = role === '技术' ? 0.15 : 0;
+  const rate = Math.min(0.85, baseRate + techBonus);
+  if (h % 100 < rate * 100) return '有笔试';
+  if (h % 100 < (rate + 0.2) * 100) return '不限';
+  return '无笔试';
+}
 for (const c of COMPANIES) {
-  const [company, industry, city, ctype, scale, salary, url, intro] = c;
+  const [company, industry, city, ctype, scale, salary, url, intro, , urlType, portalName, preRelease] = c;
   const tier = c[8] || tierOf(ctype, scale);
   const prov = provOf(city);
+  const ctypeCat = ctypeCatOf(ctype);
+  const isPreCo = !!preRelease;
   const templates = JOB_TEMPLATES[industry] || JOB_TEMPLATES["互联网/科技"];
   const h = hash(company);
   // 每家公司取 2-3 个岗位（确定性；步长与模板数互质避免重复）
@@ -353,27 +597,34 @@ for (const c of COMPANIES) {
   }
   if (picked.length < 2) picked.push(...templates.slice(0, 2 - picked.length));
   const seenTitles = new Set();
+  const pickedRoles = [];
   picked.forEach((tpl, i) => {
     seq++;
     let title = tpl.title;
     let k = 1;
     while (seenTitles.has(title)) { title = `${tpl.title}（${company}）`; k++; if (k > 3) break; }
     seenTitles.add(title);
+    // 供应链类从职能中独立出来
+    let role = tpl.role;
+    if (role === "职能" && /供应链|采购|物流|仓储|计划|关务/.test(title)) role = "供应链";
+    pickedRoles.push(role);
     const track = trackOf(company, title);
-    const tags = [tpl.role, company.length > 6 ? company.slice(0, 6) : company, tier, track.name, ...tpl.kw.slice(0, 3)];
+    const tags = [role, company.length > 6 ? company.slice(0, 6) : company, tier, track.name, ...tpl.kw.slice(0, 3)];
     // 职责与要求（按岗位类别生成 3 条职责 + 3-4 条要求）
-    const respBase = RESP_BY_ROLE[tpl.role] || RESP_BY_ROLE['职能'];
-    const reqBase = REQ_BY_ROLE[tpl.role] || REQ_BY_ROLE['职能'];
-    const kws = tpl.kw.slice(0, 3).join('、');
-    const resp = respBase.slice(0, 3).map((r, ri) => ri === 0 ? r.replace('相关', `与${kws}相关`) : r);
-    const req = [reqBase[0].replace('本科及以上学历', tpl.degree).replace('本科及以上学历', tpl.degree),
+    const respBase = RESP_BY_ROLE[role] || RESP_BY_ROLE["职能"];
+    const reqBase = REQ_BY_ROLE[role] || REQ_BY_ROLE["职能"];
+    const kws = tpl.kw.slice(0, 3).join("、");
+    const resp = respBase.slice(0, 3).map((r, ri) => ri === 0 ? r.replace("相关", `与${kws}相关`) : r);
+    const req = [reqBase[0].replace("本科及以上学历", tpl.degree).replace("本科及以上学历", tpl.degree),
       ...reqBase.slice(1, 4)];
+    const descPrefix = isPreCo ? `【预发布 · ${preRelease}开放投递】` : "";
     jobs.push({
-      id: `c${String(seq).padStart(4, '0')}`,
+      id: `c${String(seq).padStart(4, "0")}`,
       company,
       logoColor: INDUSTRY_COLORS[industry] || "#1677ff",
       title,
-      role: tpl.role,
+      role,
+      subRole: subRoleOf(title, role),
       tier,
       type: track.type,
       track: track.name,
@@ -383,28 +634,93 @@ for (const c of COMPANIES) {
       prov,
       industry,
       ctype,
+      ctypeCat,
       scale,
       degree: tpl.degree,
       salary,
       tags,
       kw: tpl.kw,
       url,
-      portal: `${company}招聘官网`,
-      desc: `${tpl.desc} ${intro}，规模${scale}，总部${city}（${prov}）。`,
+      urlType: urlType || (url && url.includes("baidu") ? "thirdparty" : "official"),
+      portal: portalName || `${company}招聘官网`,
+      hasExam: hasExamOf(company, title, tier, role),
+      isPre: isPreCo,
+      preTime: isPreCo ? preRelease : "",
+      desc: `${descPrefix}${tpl.desc} ${intro}，规模${scale}，总部${city}（${prov}）。`,
       resp,
       req
     });
   });
+  // ---- 补充高细分具体岗位（每家公司按hash概率增加，岗位名更具体） ----
+  const addSpecific = (isPre, preTime) => {
+    if (!pickedRoles.length) return;
+    const role = pickedRoles[(h >>> 8) % pickedRoles.length];
+    const pool = SPECIFIC_JOBS[role] || SPECIFIC_JOBS["职能"];
+    const sp = pool[(h >>> 11) % pool.length];
+    seq++;
+    let title = sp.title;
+    if (seenTitles.has(title)) return;
+    seenTitles.add(title);
+    const track = trackOf(company, title);
+    const respBase = RESP_BY_ROLE[role] || RESP_BY_ROLE["职能"];
+    const reqBase = REQ_BY_ROLE[role] || REQ_BY_ROLE["职能"];
+    const kws = sp.kw.slice(0, 3).join("、");
+    const resp = respBase.slice(0, 3).map((r, ri) => ri === 0 ? r.replace("相关", `与${kws}相关`) : r);
+    const req = [reqBase[0].replace("本科及以上学历", sp.degree).replace("本科及以上学历", sp.degree),
+      ...reqBase.slice(1, 4)];
+    jobs.push({
+      id: `c${String(seq).padStart(4, "0")}`,
+      company,
+      logoColor: INDUSTRY_COLORS[industry] || "#1677ff",
+      title,
+      role,
+      subRole: sp.sub,
+      tier,
+      type: track.type,
+      track: track.name,
+      trackNote: track.note,
+      gradYear: track.gradYear,
+      city,
+      prov,
+      industry,
+      ctype,
+      ctypeCat,
+      scale,
+      degree: sp.degree,
+      salary,
+      tags: [role, sp.sub, company.length > 6 ? company.slice(0, 6) : company, tier, ...sp.kw.slice(0, 2)],
+      kw: sp.kw,
+      url,
+      urlType: urlType || (url && url.includes("baidu") ? "thirdparty" : "official"),
+      portal: portalName || `${company}招聘官网`,
+      hasExam: hasExamOf(company, title, tier, role),
+      isPre: !!isPre,
+      preTime: preTime || "",
+      desc: `${isPre ? `【预发布 · ${preTime}开放投递】` : ""}${sp.desc} ${intro}，规模${scale}，总部${city}（${prov}）。`,
+      resp,
+      req
+    });
+  };
+  // 60%的公司额外获得1个高细分岗位（预发布公司必得）
+  if ((h >>> 5) % 10 < 6) addSpecific(isPreCo, preRelease);
+  // 在招公司也有约10%概率挂出1个未来岗位（预发布）
+  if (!isPreCo && ((h >>> 9) % 100) < 10) {
+    const preTime = PRE_MONTHS[(h >>> 12) % PRE_MONTHS.length];
+    addSpecific(true, preTime);
+  }
 }
 
 // ---------- 输出 ----------
 // 注意: data/jobs.json 可能被本机预览快照服务锁定，正式输出到 db/jobs.json
 const outPath = path.join(__dirname, '..', 'db', 'jobs.json');
-fs.writeFileSync(outPath, JSON.stringify(jobs, null, 2), 'utf8');
+fs.writeFileSync(outPath, JSON.stringify(jobs), 'utf8');
 
 const industries = {};
 const cities = {};
 const roles = {};
+const subRoles = {};
+const catTypes = {};
+const preStates = { '在招': 0, '预发布': 0 };
 const tiers = {};
 const provs = {};
 const tracks = {};
@@ -412,6 +728,9 @@ for (const j of jobs) {
   industries[j.industry] = (industries[j.industry] || 0) + 1;
   cities[j.city] = (cities[j.city] || 0) + 1;
   roles[j.role] = (roles[j.role] || 0) + 1;
+  if (j.subRole) subRoles[j.subRole] = (subRoles[j.subRole] || 0) + 1;
+  if (j.ctypeCat) catTypes[j.ctypeCat] = (catTypes[j.ctypeCat] || 0) + 1;
+  preStates[j.isPre ? '预发布' : '在招']++;
   tiers[j.tier] = (tiers[j.tier] || 0) + 1;
   provs[j.prov] = (provs[j.prov] || 0) + 1;
   tracks[j.track] = (tracks[j.track] || 0) + 1;
@@ -419,8 +738,11 @@ for (const j of jobs) {
 console.log(`✅ 生成完成：共 ${jobs.length} 条岗位，覆盖 ${new Set(jobs.map(j => j.company)).size} 家公司`);
 console.log(`📊 规模等级：${Object.entries(tiers).map(([k, v]) => `${k}×${v}`).join('  ')}`);
 console.log(`🎯 投递赛道：${Object.entries(tracks).map(([k, v]) => `${k}×${v}`).join('  ')}`);
+console.log(`📅 发布状态：在招×${preStates['在招']}  预发布×${preStates['预发布']}`);
+console.log(`🏷️ 岗位大类：${Object.entries(roles).map(([k, v]) => `${k}×${v}`).join('  ')}`);
+console.log(`🏷️ 岗位细分（${Object.keys(subRoles).length}种）：${Object.entries(subRoles).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}×${v}`).join('  ')}`);
+console.log(`🏢 公司类型大类（${Object.keys(catTypes).length}种）：${Object.entries(catTypes).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}×${v}`).join('  ')}`);
 console.log(`📊 省份分布：${Object.entries(provs).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([k, v]) => `${k}×${v}`).join('  ')}`);
 console.log(`📊 行业分布：${Object.entries(industries).map(([k, v]) => `${k}×${v}`).join('  ')}`);
-console.log(`📊 岗位类别：${Object.entries(roles).map(([k, v]) => `${k}×${v}`).join('  ')}`);
 console.log(`📊 城市分布：${Object.entries(cities).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([k, v]) => `${k}×${v}`).join('  ')}`);
 console.log(`📄 输出文件：${outPath}`);

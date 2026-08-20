@@ -32,22 +32,44 @@ const PUBLIC_MODE = process.env.PUBLIC_MODE === '1';
 const SESSION_PROFILE_ROOT = path.join(ROOT, '.profiles');
 
 /* ---------------- 浏览器检测 ---------------- */
+// Edge 优先（用户偏好），Chrome 次之
+const BROWSER_CANDIDATES = [
+  process.env.PUPPETEER_EXECUTABLE_PATH,
+  // Edge first
+  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  // Chrome fallback
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  // Linux
+  '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable',
+  '/usr/bin/chromium-browser', '/usr/bin/chromium',
+  // macOS
+  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+].filter(Boolean);
+
 function detectBrowser() {
-  const candidates = [
-    process.env.PUPPETEER_EXECUTABLE_PATH,
-    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-    '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable',
-    '/usr/bin/chromium-browser', '/usr/bin/chromium',
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-  ].filter(Boolean);
-  for (const c of candidates) {
+  for (const c of BROWSER_CANDIDATES) {
     try { if (fs.existsSync(c)) return c; } catch (_) {}
   }
   return null;
+}
+
+function detectAllBrowsers() {
+  const seen = new Set();
+  const out = [];
+  for (const c of BROWSER_CANDIDATES) {
+    if (!c) continue;
+    try {
+      if (fs.existsSync(c) && !seen.has(c)) {
+        seen.add(c);
+        const name = c.includes('Edge') || c.includes('edge') ? 'Edge' : 'Chrome';
+        out.push({ name, path: c });
+      }
+    } catch (_) {}
+  }
+  return out;
 }
 
 /* ---------------- 投递记录持久化 ---------------- */
@@ -214,9 +236,10 @@ class ApplyBot {
   }
 
   async applyTo(url, profile) {
-    this.log(`🖥️ 启动浏览器驱动 ${detectBrowser()}`);
+    const browserPath = this.task.browserPath || detectBrowser();
+    this.log(`🖥️ 启动浏览器驱动 ${browserPath}`);
     this.browser = await puppeteer.launch({
-      executablePath: detectBrowser(),
+      executablePath: browserPath,
       headless: APPLY_HEADLESS,
       // A public deployment must never share login cookies between visitors.
       userDataDir: this.task.profileDir || PROFILE_DIR,
@@ -401,7 +424,9 @@ app.use('/data/applications.json', (_req, res) => res.status(404).end());
 app.use('/db/jobs_custom.json', (_req, res) => res.status(404).end());
 app.use(express.static(ROOT));
 
-app.get('/api/config', (_req, res) => res.json({ publicMode: PUBLIC_MODE, browserAvailable: !!detectBrowser() }));
+app.get('/api/config', (_req, res) => res.json({ publicMode: PUBLIC_MODE, browserAvailable: !!detectBrowser(), browsers: detectAllBrowsers() }));
+
+app.get('/api/browsers', (_req, res) => res.json({ browsers: detectAllBrowsers(), default: detectBrowser() }));
 
 // Public visitors must never receive the server operator's resume. They start
 // from the same redacted example, then keep their changes in localStorage.
@@ -410,11 +435,11 @@ app.get('/api/profile', (_req, res) => res.json(PUBLIC_MODE ? loadExampleProfile
 const tasks = new Map(); // taskId -> { id, url, company, title, status, logs[], pending, bot }
 
 app.post('/api/apply/start', async (req, res) => {
-  const { url, company, title, profile } = req.body || {};
+  const { url, company, title, profile, browserPath } = req.body || {};
   if (!url || !/^https?:\/\//i.test(url)) return res.status(400).json({ error: '需要合法的投递 URL' });
   const ownerId = sessionIdFromRequest(req);
   const id = 'A' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6).toUpperCase();
-  const task = { id, url, company: company || '', title: title || '', status: 'running', logs: [], createdAt: new Date().toISOString(), pending: null, ownerId, profileDir: PUBLIC_MODE ? profileDirFor(ownerId) : PROFILE_DIR };
+  const task = { id, url, company: company || '', title: title || '', status: 'running', logs: [], createdAt: new Date().toISOString(), pending: null, ownerId, profileDir: PUBLIC_MODE ? profileDirFor(ownerId) : PROFILE_DIR, browserPath: browserPath || null };
   tasks.set(id, task);
   const p = profile || loadProfile();
   const bot = new ApplyBot(task);
