@@ -18,5 +18,8 @@ ENV PUBLIC_MODE=1
 ENV APPLY_HEADLESS=1
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
+RUN chown -R node:node /app
+USER node
+
 EXPOSE 8621
 CMD ["npm", "start"]
