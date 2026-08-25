@@ -1,7 +1,7 @@
-/* 职聘通·网申助手 — popup 逻辑
+/* 职聘通·网申助手 — popup 逻辑 v2.2
  * 画像仅存 chrome.storage.local，不上传。
  * 填表引擎在 fill-engine.js（同时供 Node 单测），通过 chrome.scripting.executeScript 注入页面。
- * 这里引用全局 FILL_FUNCTION。
+ * v2.2：明确支持 Chrome + Edge 双浏览器，版本号统一升级。
  */
 
 const LS_KEY = 'jh.profile.v2'; // 职聘通网站存放画像的 localStorage 键
@@ -13,8 +13,6 @@ const fillBtn = $('btn-fill');
 const syncBtn = $('btn-sync');
 const editBtn = $('btn-edit');
 const resultEl = $('fill-result');
-const editCard = $('edit-card');
-const editArea = $('edit-area');
 
 /* ---------- 工具 ---------- */
 function fmtTime(ts) {
@@ -30,6 +28,17 @@ function showResult(msg, kind) {
 function getActiveTab() {
   return new Promise((res) => chrome.tabs.query({ active: true, currentWindow: true }, (t) => res(t && t[0])));
 }
+function countFields(p) {
+  if (!p) return 0;
+  let n = 0;
+  for (const k of Object.keys(p)) {
+    const v = p[k];
+    if (v === undefined || v === null || v === '') continue;
+    if (Array.isArray(v)) { if (v.length) n++; }
+    else n++;
+  }
+  return n;
+}
 
 /* ---------- 画像存取 ---------- */
 function loadProfile() {
@@ -40,11 +49,21 @@ function saveProfile(profile) {
 }
 async function renderStatus() {
   const { profile, syncedAt } = await loadProfile();
-  if (profile && profile.name) {
-    statusEl.innerHTML = `当前画像：<span class="name">${profile.name || '未命名'}</span> · <span class="ok">已同步 ${fmtTime(syncedAt)}</span>`;
+  if (profile && countFields(profile) > 0) {
+    const cnt = countFields(profile);
+    statusEl.innerHTML = `当前画像：<span class="name">${profile.name || '未命名'}</span>
+      <span class="ready">✓ 就绪</span>
+      <span class="field-count">(${cnt}字段)</span>
+      <br><span style="font-size:11px;color:var(--muted)">更新于 ${fmtTime(syncedAt)}</span>`;
   } else {
-    statusEl.innerHTML = `<span style="color:var(--warn)">未同步</span> —— 请在职聘通网站打开本扩展并点「从网站同步」`;
+    statusEl.innerHTML = `<span style="color:var(--warn)">画像未填写</span><br>
+      <span style="font-size:11px">点「📝 完善画像」开始填写，或从网站同步</span>`;
   }
+}
+
+/* ---------- 打开编辑器 ---------- */
+function openEditor() {
+  chrome.tabs.create({ url: chrome.runtime.getURL('editor.html') });
 }
 
 /* ---------- 同步：注入读取 localStorage ---------- */
@@ -70,12 +89,12 @@ async function syncFromSite() {
       args: [LS_KEY],
     });
     if (!result) {
-      showResult('当前页面未找到职聘通画像。请先在职聘通网站「简历画像」中填写信息。', 'warn');
+      showResult('当前页面未找到职聘通画像。请先在网站「简历画像」中填写，或点「完善画像」直接编辑。', 'warn');
       return false;
     } else {
       await saveProfile(result);
       await renderStatus();
-      showResult(`✅ 已同步画像：${result.name}（${Object.keys(result).length} 个字段）`);
+      showResult(`✅ 已同步画像：${result.name}（${countFields(result)} 个字段）`);
       return true;
     }
   } catch (e) {
@@ -90,8 +109,8 @@ async function syncFromSite() {
 /* ---------- 一键填写：注入填表函数 ---------- */
 async function fillCurrentPage() {
   const { profile } = await loadProfile();
-  if (!profile || !profile.name) {
-    showResult('画像未同步，无法填写。请先点「从网站同步」。', 'warn');
+  if (!profile || countFields(profile) === 0) {
+    showResult('画像未填写，无法填写。请先点「📝 完善画像」。', 'warn');
     return;
   }
   const tab = await getActiveTab();
@@ -127,31 +146,13 @@ async function fillCurrentPage() {
   }
 }
 
-/* ---------- 画像编辑 ---------- */
-async function openEditor() {
-  const { profile } = await loadProfile();
-  editArea.value = profile ? JSON.stringify(profile, null, 2) : '{}';
-  editCard.hidden = false;
-}
-async function saveEdit() {
-  try {
-    const p = JSON.parse(editArea.value);
-    await saveProfile(p);
-    await renderStatus();
-    showResult('画像已保存', '');
-  } catch (e) {
-    showResult('JSON 格式错误：' + (e.message || e), 'err');
-  }
-}
-
 /* ---------- 初始化 ---------- */
 (async function init() {
   await renderStatus();
   fillBtn.addEventListener('click', fillCurrentPage);
   syncBtn.addEventListener('click', syncFromSite);
   editBtn.addEventListener('click', openEditor);
-  $('btn-save-edit').addEventListener('click', saveEdit);
-  $('btn-close-edit').addEventListener('click', () => { editCard.hidden = true; });
+
   // 打开 popup 时若当前页疑似职聘通站点，自动同步一次
   try {
     const tab = await getActiveTab();
@@ -159,4 +160,11 @@ async function saveEdit() {
       await syncFromSite();
     }
   } catch (_) {}
+
+  // 画像变更时刷新状态
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.profile) {
+      renderStatus();
+    }
+  });
 })();

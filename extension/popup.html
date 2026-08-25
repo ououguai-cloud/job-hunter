@@ -9,40 +9,42 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">📋 职聘通·网申助手</div>
-    <div class="ver">v1.0</div>
+    <div class="logo"><span class="dot">📋</span>网申助手</div>
+    <div class="ver">v2.2</div>
   </header>
 
   <div class="card" id="profile-card">
     <div class="card-title">简历画像</div>
     <div id="profile-status" class="profile-status">正在读取…</div>
     <div class="btn-row">
-      <button id="btn-sync" class="btn primary sm">🔄 从网站同步</button>
-      <button id="btn-edit" class="btn ghost sm">✏️ 查看/编辑</button>
+      <button id="btn-edit" class="btn primary sm">📝 完善画像</button>
+      <button id="btn-sync" class="btn ghost sm">🔄 从网站同步</button>
     </div>
   </div>
 
   <button id="btn-fill" class="btn primary lg fill-btn">⚡ 一键填写本页</button>
   <div id="fill-result" class="result" hidden></div>
 
-  <div class="card edit-card" id="edit-card" hidden>
-    <div class="card-title">编辑画像（JSON）<span class="hint">保存后即时生效</span></div>
-    <textarea id="edit-area" rows="14" spellcheck="false"></textarea>
-    <div class="btn-row">
-      <button id="btn-save-edit" class="btn primary sm">💾 保存</button>
-      <button id="btn-close-edit" class="btn ghost sm">收起</button>
-    </div>
-  </div>
-
   <details class="help">
     <summary>使用说明</summary>
-    <ol>
-      <li>先在<b>职聘通网站</b>的「简历画像」中填写姓名、手机、邮箱、学校、专业等信息。</li>
-      <li>在该网站页面打开本扩展（点浏览器右上角图标），点「🔄 从网站同步」—— 画像会自动存入扩展本地。</li>
-      <li>打开任意企业官网的投递/网申页面，点扩展图标 →「⚡ 一键填写本页」，个人信息自动填入。</li>
-      <li>遇到验证码、简历上传、需勾选同意条款等，按页面提示手动处理即可。</li>
-    </ol>
-    <p class="privacy">🔒 画像数据仅保存在本扩展本地（chrome.storage），不上传任何服务器。</p>
+    <div class="usage-section">
+      <div class="usage-title">方式一：独立使用（推荐）</div>
+      <ol>
+        <li>点上方<b>「📝 完善画像」</b>打开编辑器，填写个人信息。</li>
+        <li>打开任意企业官网的投递/网申页面。</li>
+        <li>点扩展图标 → <b>「⚡ 一键填写本页」</b>，信息自动填入。</li>
+      </ol>
+    </div>
+    <div class="usage-section">
+      <div class="usage-title">方式二：搭配职聘通网站</div>
+      <ol>
+        <li>在<b>职聘通网站</b>的「简历画像」中填写信息。</li>
+        <li>在该网站页面打开本扩展，点<b>「🔄 从网站同步」</b>。</li>
+        <li>打开企业投递页，点<b>「⚡ 一键填写本页」</b>。</li>
+      </ol>
+    </div>
+    <div class="usage-note">💡 验证码、简历上传、同意条款等需按页面手动处理。</div>
+    <p class="privacy">🔒 画像数据仅保存在本扩展本地（chrome.storage），不上传任何服务器。支持 Chrome、Edge 等浏览器。</p>
   </details>
 </div>
 <script src="fill-engine.js"></script>
