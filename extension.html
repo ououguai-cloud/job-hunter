@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网申助手 · 职聘通 JobHunter</title>
+<style>
+:root{
+  --font-heading:'Helvetica Now Display Bold','Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  --color-text:#192837; --color-accent:#7342E2; --color-login-bg:#F2F2EE;
+  --card:rgba(255,255,255,.88); --border:rgba(25,40,55,.10); --text:#192837; --sub:rgba(25,40,55,.62);
+  --primary:#7342E2; --primary-weak:#F1EBFD; --success:#16a34a; --success-weak:#ecfdf3;
+  --warn:#d97706; --warn-weak:#fffbeb; --danger:#dc2626;
+  --radius:18px; --shadow:0 1px 3px rgba(25,40,55,.08),0 8px 28px rgba(25,40,55,.07);
+  --ease-out:cubic-bezier(.22,1,.36,1); --mono:'Consolas','SF Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--color-login-bg);color:var(--color-text);font-family:var(--font-body);font-size:14px;line-height:1.7}
+.wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px}
+header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.back{color:var(--sub);text-decoration:none;font-size:13px;font-weight:600}
+.back:hover{color:var(--primary)}
+.badge{font-size:11px;color:var(--primary);background:var(--primary-weak);padding:3px 12px;border-radius:999px;font-weight:600}
+h1{font-family:var(--font-heading);font-size:30px;line-height:1.25;margin-bottom:10px}
+.lede{font-size:15px;color:var(--sub);margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+.card h2{font-family:var(--font-heading);font-size:18px;margin-bottom:6px}
+.card .sub{color:var(--sub);font-size:13px;margin-bottom:16px}
+.download{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;background:var(--primary);color:#fff;border-radius:999px;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 6px 24px rgba(115,66,226,.32);transition:.2s var(--ease-out)}
+.download:hover{background:#6434d4;transform:scale(1.03)}
+.dl-meta{font-size:12px;color:var(--sub);margin-top:10px}
+.steps{counter-reset:s;list-style:none}
+.steps li{position:relative;padding:14px 0 14px 44px;border-bottom:1px solid var(--border)}
+.steps li:last-child{border-bottom:none}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:14px;width:28px;height:28px;border-radius:50%;background:var(--primary-weak);color:var(--primary);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading)}
+.steps li b{color:var(--text)}
+.steps code{background:rgba(25,40,55,.06);padding:2px 7px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--text)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.flow .box{background:rgba(115,66,226,.06);border:1px solid rgba(115,66,226,.18);border-radius:12px;padding:14px;text-align:center}
+.flow .box .n{font-size:20px;margin-bottom:4px}
+.flow .box b{display:block;font-size:13px;margin-bottom:2px}
+.flow .box span{font-size:12px;color:var(--sub)}
+.privacy{background:var(--success-weak);border:1px solid #bbf7d0;color:#166534;border-radius:12px;padding:12px 16px;font-size:13px}
+.privacy b{color:#14532d}
+.faq details{border-bottom:1px solid var(--border);padding:10px 0}
+.faq summary{font-weight:600;cursor:pointer;color:var(--text)}
+.faq p{color:var(--sub);margin:8px 0 4px;font-size:13px}
+footer{text-align:center;color:var(--sub);font-size:12px;margin-top:32px}
+@media(max-width:600px){.flow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="back" href="index.html">← 返回职聘通</a>
+    <span class="badge">v1.0 浏览器扩展</span>
+  </header>
+
+  <h1>📋 职聘通·网申助手</h1>
+  <p class="lede">在任意企业官网的投递页，一键自动填写姓名、手机、邮箱、学校、专业等个人信息。画像从职聘通网站同步，一处完善处处可用。</p>
+
+  <div class="card">
+    <h2>下载扩展</h2>
+    <p class="sub">支持 Edge / Chrome（Chromium 内核浏览器）。下载 zip 后按下方步骤加载。</p>
+    <a class="download" href="extension.zip" download>⬇️ 下载网申助手（zip）</a>
+    <p class="dl-meta">文件大小约 22KB · MIT 开源 · 数据仅存本地不上传</p>
+  </div>
+
+  <div class="card">
+    <h2>安装步骤（约 2 分钟）</h2>
+    <ol class="steps">
+      <li>点击上方「下载网申助手」，得到 <code>extension.zip</code>，<b>解压</b>到一个固定文件夹（例如 <code>D:\jobhunter-extension</code>）。</li>
+      <li>打开浏览器扩展管理页：<b>Edge</b> 访问 <code>edge://extensions</code>；<b>Chrome</b> 访问 <code>chrome://extensions</code>。</li>
+      <li>打开右上角「<b>开发人员模式 / 开发者模式</b>」开关。</li>
+      <li>点「<b>加载已解压的扩展</b>」→ 选择刚解压出来的 <code>extension</code> 文件夹（含 manifest.json 的那一层）。</li>
+      <li>扩展出现在列表里即安装成功。建议点工具栏「扩展」图标把它<b>固定</b>到工具栏方便调用。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>使用流程</h2>
+    <div class="flow">
+      <div class="box"><div class="n">①</div><b>完善画像</b><span>在职聘通网站「简历画像」填好姓名、手机、邮箱、学校等</span></div>
+      <div class="box"><div class="n">②</div><b>同步到插件</b><span>在该网站页打开扩展，点「从网站同步」，画像存入插件本地</span></div>
+      <div class="box"><div class="n">③</div><b>一键填写</b><span>打开企业投递页，点扩展「一键填写本页」自动填入</span></div>
+    </div>
+    <p class="dl-meta" style="margin-top:14px">提示：验证码、简历上传、需勾选同意条款等步骤按页面手动处理即可；插件只填基本信息，不替你点「提交」。</p>
+  </div>
+
+  <div class="card">
+    <h2>为什么需要它？</h2>
+    <p class="sub">原「一键投递」自动化引擎依赖 Node + puppeteer，公网静态站无法运行。网申助手改为<b>浏览器扩展</b>：登录、验证码、翻页你自己掌控，插件只负责把重复的个人信息填进去——更稳、更可控，几乎不受反爬限制影响。</p>
+  </div>
+
+  <div class="privacy">🔒 <b>隐私说明：</b>画像数据仅保存在本扩展的本地存储（chrome.storage）中，不上传任何服务器。同步时也只是从职聘通网站页面的 localStorage 读取后存到扩展，全程在你的浏览器内完成。</div>
+
+  <div class="card faq">
+    <h2>常见问题</h2>
+    <details><summary>为什么我点了「从网站同步」却提示未找到画像？</summary><p>请确保当前打开的是职聘通网站页面，并且在网站的「简历画像」里已经填写过信息（至少有姓名）。画像存在浏览器 localStorage，必须在该网站页面上同步。</p></details>
+    <details><summary>为什么有的字段没自动填上？</summary><p>插件用启发式规则识别字段（按标签文字、name、placeholder 匹配）。部分网站字段名很特殊时会无法识别，可在扩展里「查看/编辑」画像确认数据齐全，遇到无法识别的字段手动补填即可。</p></details>
+    <details><summary>支持 Firefox 吗？</summary><p>暂未适配 Firefox。当前支持 Edge / Chrome 及其他 Chromium 内核浏览器（如 360、QQ 浏览器的极速模式）。</p></details>
+    <details><summary>安装后浏览器提示「不安全」？</summary><p>这是 Chromium 对所有「开发者模式 / 未上架商店」扩展的通用提示，并非本扩展有问题。本扩展代码完全开源、权限仅 storage/activeTab/scripting，可自行审计。</p></details>
+  </div>
+
+  <footer>职聘通 JobHunter · 开源求职平台 · <a style="color:var(--sub)" href="https://github.com/ououguai-cloud/job-hunter">GitHub</a></footer>
+</div>
+</body>
+</html>

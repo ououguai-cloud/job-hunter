@@ -32,3 +32,10 @@ Thumbs.db
 # 本机桌面启动器（个人路径，不入库）
 *.bat
 *.vbs
+
+# 静态部署构建产物（deploy-static 内含内嵌 zip 的安装页，不入库）
+deploy-static/
+
+# 损坏的旧 .git 备份
+.git.bak/
+

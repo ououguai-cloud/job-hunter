@@ -1,0 +1,50 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --border: #e4e7ec;
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #4f46e5;
+  --primary-d: #4338ca;
+  --ghost: #f1f5f9;
+  --ok: #16a34a;
+  --warn: #d97706;
+  --err: #dc2626;
+}
+body { width: 360px; font: 13px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); }
+.wrap { padding: 12px; }
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.logo { font-weight: 700; font-size: 15px; }
+.ver { font-size: 11px; color: var(--muted); background: var(--ghost); padding: 1px 8px; border-radius: 10px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.card-title { font-weight: 700; margin-bottom: 6px; font-size: 13px; }
+.card-title .hint { font-weight: 400; color: var(--muted); font-size: 11px; margin-left: 6px; }
+.profile-status { color: var(--muted); margin-bottom: 8px; font-size: 12px; }
+.profile-status .name { color: var(--text); font-weight: 600; }
+.profile-status .ok { color: var(--ok); }
+
+.btn-row { display: flex; gap: 8px; }
+.btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: .15s; }
+.btn:hover { border-color: var(--primary); color: var(--primary); }
+.btn.sm { padding: 6px 10px; }
+.btn.lg { width: 100%; padding: 12px; font-size: 14px; }
+.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn.primary:hover { background: var(--primary-d); color: #fff; }
+.btn.ghost { background: var(--ghost); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.fill-btn { margin-bottom: 8px; }
+
+.result { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; border-radius: 8px; padding: 10px; font-size: 12px; margin-bottom: 10px; }
+.result.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.result.err { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+.edit-card textarea { width: 100%; font: 11px/1.5 Consolas, monospace; border: 1px solid var(--border); border-radius: 8px; padding: 8px; resize: vertical; margin-bottom: 8px; color: var(--text); background: #f8fafc; }
+
+.help { margin-top: 6px; }
+.help summary { cursor: pointer; font-weight: 600; color: var(--muted); padding: 6px 0; }
+.help ol { padding-left: 18px; color: var(--muted); font-size: 12px; margin: 6px 0; }
+.help ol li { margin-bottom: 4px; }
+.help .privacy { font-size: 11px; color: var(--muted); margin-top: 6px; }
