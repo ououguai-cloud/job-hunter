@@ -102,9 +102,9 @@ function section(t) { console.log('\n── ' + t + ' ──'); }
   /* ========== Tab2 岗位推荐 ========== */
   section('Tab2 岗位推荐');
   await goto('recommend');
-  await page.waitForFunction(() => document.querySelectorAll('#recList .job-card').length === 30, { timeout: 10000 });
+  await page.waitForFunction(() => document.querySelectorAll('#recList .job-card').length >= 20, { timeout: 10000 });
   const recCards = await page.$$eval('#recList .job-card', cards => cards.map(c => c.innerText.slice(0, 120)));
-  ok(recCards.length === 30, `推荐列表渲染 30 张卡片（Top 30 精选）`);
+  ok(recCards.length >= 20, `推荐列表渲染 ${recCards.length} 张卡片（新版分页默认每页 20 条）`);
   const recHasScore = await page.$$eval('#recList .job-card', cards => cards.every(c => /推荐|可投|强推|匹配/.test(c.innerText) || /\d{2,3}/.test(c.innerText)));
   ok(recHasScore, '推荐卡片含匹配度评分');
   // 加入投递单（第一张卡片的"加入投递单"按钮）
