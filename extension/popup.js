@@ -1,7 +1,8 @@
-/* 职聘通·网申助手 — popup 逻辑 v2.2
+/* 职聘通·网申助手 — popup 逻辑 v2.6
  * 画像仅存 chrome.storage.local，不上传。
  * 填表引擎在 fill-engine.js（同时供 Node 单测），通过 chrome.scripting.executeScript 注入页面。
- * v2.2：明确支持 Chrome + Edge 双浏览器，版本号统一升级。
+ * v2.6：画像字段扩展至 60+ 项（国籍/证件类型/出生地/学制/学习形式/学校层次/专业类别/
+ *       录取批次/QQ/博客/LinkedIn/GitHub/期望行业/期望职能/接受出差/接受外派/科研经历/竞赛经历等）
  */
 
 const LS_KEY = 'jh.profile.v2'; // 职聘通网站存放画像的 localStorage 键
@@ -13,6 +14,7 @@ const fillBtn = $('btn-fill');
 const syncBtn = $('btn-sync');
 const editBtn = $('btn-edit');
 const resultEl = $('fill-result');
+const noneChk = $('opt-fill-none');
 
 /* ---------- 工具 ---------- */
 function fmtTime(ts) {
@@ -124,10 +126,11 @@ async function fillCurrentPage() {
     const [{ result }] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: FILL_FUNCTION,
-      args: [profile],
+      args: [profile, { fillNoneWhenEmpty: noneChk.checked }],
     });
     const r = result || {};
     const parts = [`✅ 已填 ${r.filled || 0} 项`];
+    if (r.filledNone) parts.push(`其中填「无」 ${r.filledNone}`);
     if (r.skipped) parts.push(`缺数据 ${r.skipped}`);
     if (r.unmatched) parts.push(`未识别 ${r.unmatched}`);
     if (r.captcha) parts.push(`验证码 ${r.captcha}（需手动）`);
@@ -152,6 +155,15 @@ async function fillCurrentPage() {
   fillBtn.addEventListener('click', fillCurrentPage);
   syncBtn.addEventListener('click', syncFromSite);
   editBtn.addEventListener('click', openEditor);
+
+  // 「空缺项自动填无」开关：读取/持久化偏好（默认开）
+  try {
+    const pref = await new Promise((res) => chrome.storage.local.get(['fillNoneWhenEmpty'], res));
+    noneChk.checked = pref.fillNoneWhenEmpty !== false;
+  } catch (_) { /* 保持默认勾选 */ }
+  noneChk.addEventListener('change', () => {
+    chrome.storage.local.set({ fillNoneWhenEmpty: noneChk.checked });
+  });
 
   // 打开 popup 时若当前页疑似职聘通站点，自动同步一次
   try {

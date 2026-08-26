@@ -9,8 +9,9 @@
 <body>
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand"><span class="dot">📋</span>职聘通·网申助手 <span class="badge">画像编辑器 v2.2</span></div>
+    <div class="brand"><span class="dot">📋</span>职聘通·网申助手 <span class="badge">画像编辑器 v2.6</span></div>
     <div class="topbar-actions">
+      <button id="btn-example" class="btn-ghost">📋 载入示例</button>
       <button id="btn-import-site" class="btn-ghost">🔄 从网站导入</button>
       <button id="btn-import-json" class="btn-ghost">📥 导入JSON</button>
       <button id="btn-export-json" class="btn-ghost">📤 导出JSON</button>
@@ -33,6 +34,7 @@
     <a href="#sec-lang">语言能力</a>
     <a href="#sec-exp">经历</a>
     <a href="#sec-other">其他</a>
+    <a href="#sec-family">家庭信息</a>
   </nav>
 
   <!-- 右侧表单 -->
@@ -46,7 +48,13 @@
         <label>性别
           <select data-key="gender"><option value="">请选择</option><option>男</option><option>女</option></select>
         </label>
+        <label>国籍<input data-key="nationality" placeholder="中国" list="nationalities"></label>
+        <datalist id="nationalities"><option>中国</option><option>其他</option></datalist>
+        <label>证件类型
+          <select data-key="idType"><option value="">请选择</option><option>身份证</option><option>护照</option><option>军官证</option><option>港澳通行证</option><option>台湾通行证</option><option>外国人居留证</option></select>
+        </label>
         <label>出生年月<input data-key="birth" placeholder="2005.01 或 2005-01"></label>
+        <label>出生地<input data-key="birthplace" placeholder="浙江省杭州市"></label>
         <label>年龄<input data-key="age" placeholder="21"></label>
         <label>民族<input data-key="nation" placeholder="汉族" list="nations"></label>
         <datalist id="nations"><option>汉族</option><option>蒙古族</option><option>回族</option><option>藏族</option><option>维吾尔族</option><option>苗族</option><option>彝族</option><option>壮族</option><option>满族</option><option>其他</option></datalist>
@@ -57,7 +65,13 @@
         <label>婚姻状况
           <select data-key="marital"><option value="">请选择</option><option>未婚</option><option>已婚</option><option>离异</option></select>
         </label>
+        <label>独生子女
+          <select data-key="onlyChild"><option value="">请选择</option><option>是</option><option>否</option></select>
+        </label>
         <label>身高<input data-key="height" placeholder="178cm"></label>
+        <label>血型
+          <select data-key="bloodType"><option value="">请选择</option><option>A</option><option>B</option><option>O</option><option>AB</option><option>未知</option></select>
+        </label>
         <label>健康状况
           <select data-key="health"><option value="">请选择</option><option>良好</option><option>一般</option></select>
         </label>
@@ -74,10 +88,32 @@
       <h2>教育背景</h2>
       <div class="grid2">
         <label>毕业院校<input data-key="school" placeholder="XX大学"></label>
+        <label>院系/学院<input data-key="department" placeholder="计算机学院/经济管理学院"></label>
         <label>专业<input data-key="major" placeholder="工商管理"></label>
+        <label>专业类别（学科门类）
+          <select data-key="majorCategory"><option value="">请选择</option><option>哲学</option><option>经济学</option><option>法学</option><option>教育学</option><option>文学</option><option>历史学</option><option>理学</option><option>工学</option><option>农学</option><option>医学</option><option>军事学</option><option>管理学</option><option>艺术学</option></select>
+        </label>
         <label>第二专业/辅修<input data-key="secondMajor" placeholder="（选填）"></label>
+        <label>班级<input data-key="class" placeholder="计算机2301班"></label>
+        <label>学号<input data-key="studentId" placeholder="（选填）"></label>
         <label>学历/学位
           <select data-key="degree"><option value="">请选择</option><option>大专</option><option>本科</option><option>硕士研究生</option><option>博士研究生</option><option>MBA/MPA</option></select>
+        </label>
+        <label>是否第一学历
+          <select data-key="isFirstDegree"><option value="">请选择</option><option>是</option><option>否</option></select>
+        </label>
+        <label>学校层次
+          <select data-key="schoolLevel"><option value="">请选择</option><option>985</option><option>211</option><option>双一流</option><option>普通本科</option><option>独立学院</option><option>民办</option><option>高职高专</option></select>
+        </label>
+        <label>院校所在地<input data-key="schoolLocation" placeholder="浙江省杭州市"></label>
+        <label>学制
+          <select data-key="eduDuration"><option value="">请选择</option><option>两年</option><option>三年</option><option>四年</option><option>五年</option></select>
+        </label>
+        <label>学习形式
+          <select data-key="eduMode"><option value="">请选择</option><option>全日制</option><option>非全日制</option></select>
+        </label>
+        <label>录取批次
+          <select data-key="admissionBatch"><option value="">请选择</option><option>一本</option><option>二本</option><option>三本</option><option>提前批</option><option>专科批</option></select>
         </label>
         <label>入学时间<input data-key="schoolStart" placeholder="2023.09"></label>
         <label>毕业年份<input data-key="gradYear" placeholder="2027"></label>
@@ -96,8 +132,13 @@
       <h2>联系方式</h2>
       <div class="grid2">
         <label>手机号<input data-key="phone" placeholder="13800138000"></label>
+        <label>家庭电话/座机<input data-key="homePhone" placeholder="0571-12345678（选填）"></label>
         <label>邮箱<input data-key="email" placeholder="you@example.com"></label>
         <label>微信号<input data-key="wechat" placeholder="your_wechat"></label>
+        <label>QQ号<input data-key="qq" placeholder="123456789（选填）"></label>
+        <label>博客/个人主页<input data-key="blog" placeholder="https://example.com（选填）"></label>
+        <label>LinkedIn<input data-key="linkedin" placeholder="https://linkedin.com/in/...（选填）"></label>
+        <label>GitHub<input data-key="github" placeholder="https://github.com/...（选填）"></label>
         <label>省份<input data-key="province" placeholder="浙江"></label>
         <label>现居城市<input data-key="city" placeholder="杭州市"></label>
         <label>通讯地址<input data-key="address" placeholder="XX省XX市XX区XX路X号"></label>
@@ -114,6 +155,8 @@
       <div class="grid2">
         <label>求职意向/期望职位<input data-key="target" placeholder="销售管培生"></label>
         <label>期望城市<input data-key="preferCity" placeholder="杭州、北京、上海"></label>
+        <label>期望行业<input data-key="preferIndustry" placeholder="互联网/IT、金融、快消"></label>
+        <label>期望职能<input data-key="preferFunction" placeholder="产品、技术、运营"></label>
         <label>求职类型
           <select data-key="jobType"><option value="">请选择</option><option>全职</option><option>实习</option><option>兼职</option><option>校园招聘</option></select>
         </label>
@@ -121,6 +164,12 @@
         <label>期望年薪<input data-key="expAnnual" placeholder="10-15万"></label>
         <label>接受调剂
           <select data-key="acceptAdjust"><option value="">请选择</option><option>接受</option><option>不接受</option><option>服从</option></select>
+        </label>
+        <label>接受出差
+          <select data-key="acceptTravel"><option value="">请选择</option><option>接受</option><option>不接受</option></select>
+        </label>
+        <label>接受外派/调岗
+          <select data-key="acceptRelocate"><option value="">请选择</option><option>接受</option><option>不接受</option></select>
         </label>
         <label>可到岗时间<input data-key="availableTime" placeholder="随时到岗 / 2026年7月"></label>
         <label>实习时长<input data-key="internDuration" placeholder="3个月以上"></label>
@@ -134,24 +183,80 @@
     <!-- ========== 语言能力 ========== -->
     <section id="sec-lang" class="form-section">
       <h2>语言能力</h2>
+      <p class="sec-hint">没有的证书选「无」即可；有其他证书选「其他」后在旁边输入框填写具体名称。</p>
       <div class="grid2">
-        <label>英语水平<input data-key="english" placeholder="CET-4 / CET-6 / 雅思7.0" list="english-levels"></label>
-        <datalist id="english-levels"><option>CET-4</option><option>CET-6</option><option>专四</option><option>专八</option><option>雅思7.0</option><option>托福100</option><option>无</option></datalist>
-        <label>其他外语<input data-key="otherLang" placeholder="日语N2 / 法语"></label>
-        <label>计算机水平<input data-key="computerLevel" placeholder="二级 / 三级"></label>
-        <label>普通话水平<input data-key="mandarin" placeholder="二级甲等"></label>
+        <label>英语水平
+          <select data-key="english">
+            <option value="">请选择</option>
+            <option>无</option>
+            <option>CET-4</option>
+            <option>CET-6</option>
+            <option>专业四级</option>
+            <option>专业八级</option>
+            <option data-ext>雅思</option>
+            <option data-ext>托福</option>
+            <option data-ext>托业</option>
+            <option data-ext>BEC商务英语</option>
+            <option data-ext>其他</option>
+          </select>
+        </label>
+        <label class="ext-input" data-ext-wrap="english" hidden>英语水平-具体说明<input data-custom="english" placeholder="如：雅思7.5 / 托业900分"></label>
+        <label>其他外语
+          <select data-key="otherLang">
+            <option value="">请选择</option>
+            <option>无</option>
+            <option data-ext>日语</option>
+            <option data-ext>韩语</option>
+            <option data-ext>法语</option>
+            <option data-ext>德语</option>
+            <option data-ext>西班牙语</option>
+            <option data-ext>俄语</option>
+            <option data-ext>其他</option>
+          </select>
+        </label>
+        <label class="ext-input" data-ext-wrap="otherLang" hidden>其他外语-具体说明<input data-custom="otherLang" placeholder="如：日语N2 / 法语B1"></label>
+        <label>计算机水平
+          <select data-key="computerLevel">
+            <option value="">请选择</option>
+            <option>无</option>
+            <option>国家一级</option>
+            <option>国家二级</option>
+            <option>国家三级</option>
+            <option>国家四级</option>
+            <option>软考初级</option>
+            <option>软考中级</option>
+            <option>软考高级</option>
+            <option data-ext>其他</option>
+          </select>
+        </label>
+        <label class="ext-input" data-ext-wrap="computerLevel" hidden>计算机证书-具体名称<input data-custom="computerLevel" placeholder="如：华为HCIA / 红帽RHCE"></label>
+        <label>普通话水平
+          <select data-key="mandarin">
+            <option value="">请选择</option>
+            <option>无</option>
+            <option>一级甲等</option>
+            <option>一级乙等</option>
+            <option>二级甲等</option>
+            <option>二级乙等</option>
+            <option>三级甲等</option>
+            <option>三级乙等</option>
+            <option data-ext>其他</option>
+          </select>
+        </label>
+        <label class="ext-input" data-ext-wrap="mandarin" hidden>普通话-具体说明<input data-custom="mandarin" placeholder="如：一级甲等92分"></label>
       </div>
     </section>
 
     <!-- ========== 经历（动态数组） ========== -->
     <section id="sec-exp" class="form-section">
       <h2>经历</h2>
+      <p class="sec-hint">没有的经历可以整块删空（删掉所有行即可）——填写网页时勾选「空缺项自动填无」，插件会在必填框里自动填「无」。</p>
 
       <!-- 实习/工作经历 -->
       <div class="dynamic-block" data-array-key="experiences">
         <div class="block-head">
           <h3>实习/工作经历</h3>
-          <button class="btn-add" onclick="addRow('experiences')">+ 添加</button>
+          <button class="btn-add" data-add="experiences">+ 添加</button>
         </div>
         <div class="rows" id="rows-experiences"></div>
         <template id="tpl-experiences">
@@ -159,8 +264,12 @@
             <input data-field="org" placeholder="公司/单位">
             <input data-field="role" placeholder="职位">
             <input data-field="time" placeholder="2025.06-2025.09">
+            <input data-field="salary" placeholder="薪资（选填）">
+            <input data-field="reason" placeholder="离职原因（选填）">
+            <input data-field="referee" placeholder="证明人（选填）">
+            <input data-field="refereePhone" placeholder="证明人电话（选填）">
             <textarea data-field="desc" placeholder="工作描述（简述）" rows="2"></textarea>
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -169,7 +278,7 @@
       <div class="dynamic-block" data-array-key="campus">
         <div class="block-head">
           <h3>校园经历 / 学生工作</h3>
-          <button class="btn-add" onclick="addRow('campus')">+ 添加</button>
+          <button class="btn-add" data-add="campus">+ 添加</button>
         </div>
         <div class="rows" id="rows-campus"></div>
         <template id="tpl-campus">
@@ -178,7 +287,43 @@
             <input data-field="role" placeholder="职务">
             <input data-field="time" placeholder="2023.10-2024.06">
             <textarea data-field="desc" placeholder="描述" rows="2"></textarea>
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
+          </div>
+        </template>
+      </div>
+
+      <!-- 科研经历 -->
+      <div class="dynamic-block" data-array-key="research">
+        <div class="block-head">
+          <h3>科研经历</h3>
+          <button class="btn-add" data-add="research">+ 添加</button>
+        </div>
+        <div class="rows" id="rows-research"></div>
+        <template id="tpl-research">
+          <div class="exp-row">
+            <input data-field="name" placeholder="科研项目名称">
+            <input data-field="role" placeholder="担任角色">
+            <input data-field="time" placeholder="2024.03-2024.09">
+            <textarea data-field="desc" placeholder="研究内容与成果" rows="2"></textarea>
+            <button class="btn-del" data-del>✕</button>
+          </div>
+        </template>
+      </div>
+
+      <!-- 竞赛经历 -->
+      <div class="dynamic-block" data-array-key="competitions">
+        <div class="block-head">
+          <h3>竞赛经历</h3>
+          <button class="btn-add" data-add="competitions">+ 添加</button>
+        </div>
+        <div class="rows" id="rows-competitions"></div>
+        <template id="tpl-competitions">
+          <div class="exp-row award-row">
+            <input data-field="name" placeholder="竞赛名称">
+            <input data-field="level" placeholder="级别（国家级/省级/校级）">
+            <input data-field="award" placeholder="获奖等级（一等/二等/三等/优秀奖）">
+            <input data-field="time" placeholder="获奖时间">
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -187,7 +332,7 @@
       <div class="dynamic-block" data-array-key="awards">
         <div class="block-head">
           <h3>获奖经历</h3>
-          <button class="btn-add" onclick="addRow('awards')">+ 添加</button>
+          <button class="btn-add" data-add="awards">+ 添加</button>
         </div>
         <div class="rows" id="rows-awards"></div>
         <template id="tpl-awards">
@@ -195,7 +340,7 @@
             <input data-field="name" placeholder="奖项名称">
             <input data-field="level" placeholder="级别（国家级/省级/校级）">
             <input data-field="time" placeholder="获奖时间">
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -204,7 +349,7 @@
       <div class="dynamic-block" data-array-key="projects">
         <div class="block-head">
           <h3>项目经历</h3>
-          <button class="btn-add" onclick="addRow('projects')">+ 添加</button>
+          <button class="btn-add" data-add="projects">+ 添加</button>
         </div>
         <div class="rows" id="rows-projects"></div>
         <template id="tpl-projects">
@@ -213,7 +358,7 @@
             <input data-field="role" placeholder="担任角色">
             <input data-field="time" placeholder="2024.03-2024.06">
             <textarea data-field="desc" placeholder="项目描述" rows="2"></textarea>
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -222,7 +367,7 @@
       <div class="dynamic-block" data-array-key="papers">
         <div class="block-head">
           <h3>论文 / 著作</h3>
-          <button class="btn-add" onclick="addRow('papers')">+ 添加</button>
+          <button class="btn-add" data-add="papers">+ 添加</button>
         </div>
         <div class="rows" id="rows-papers"></div>
         <template id="tpl-papers">
@@ -230,7 +375,7 @@
             <input data-field="title" placeholder="论文标题">
             <input data-field="journal" placeholder="期刊/会议">
             <input data-field="year" placeholder="发表年份">
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -239,7 +384,7 @@
       <div class="dynamic-block" data-array-key="volunteer">
         <div class="block-head">
           <h3>志愿服务经历</h3>
-          <button class="btn-add" onclick="addRow('volunteer')">+ 添加</button>
+          <button class="btn-add" data-add="volunteer">+ 添加</button>
         </div>
         <div class="rows" id="rows-volunteer"></div>
         <template id="tpl-volunteer">
@@ -248,7 +393,7 @@
             <input data-field="role" placeholder="角色">
             <input data-field="time" placeholder="2024.05">
             <textarea data-field="desc" placeholder="描述" rows="2"></textarea>
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -264,21 +409,27 @@
         <label class="full">自我介绍 / 自我评价<textarea data-key="selfIntro" rows="4" placeholder="简要介绍自己，突出优势与求职意向"></textarea></label>
         <label class="full">兴趣爱好<input data-key="hobbies" placeholder="篮球、阅读、摄影"></label>
       </div>
+    </section>
 
-      <!-- 家庭信息 -->
+    <!-- ========== 家庭信息 ========== -->
+    <section id="sec-family" class="form-section">
+      <h2>家庭信息</h2>
       <div class="dynamic-block" data-array-key="family">
         <div class="block-head">
-          <h3>家庭信息</h3>
-          <button class="btn-add" onclick="addRow('family')">+ 添加</button>
+          <h3>家庭成员</h3>
+          <button class="btn-add" data-add="family">+ 添加</button>
         </div>
         <div class="rows" id="rows-family"></div>
         <template id="tpl-family">
           <div class="exp-row family-row">
             <input data-field="relation" placeholder="关系（父亲/母亲/配偶）">
             <input data-field="name" placeholder="姓名">
+            <input data-field="age" placeholder="年龄（选填）">
+            <input data-field="politics" placeholder="政治面貌（选填）">
             <input data-field="company" placeholder="工作单位">
             <input data-field="position" placeholder="职务">
-            <button class="btn-del" onclick="removeRow(this)">✕</button>
+            <input data-field="phone" placeholder="联系电话（选填）">
+            <button class="btn-del" data-del>✕</button>
           </div>
         </template>
       </div>
@@ -298,7 +449,7 @@
   <p class="dialog-hint">粘贴简历画像 JSON 文本，或选择文件导入：</p>
   <textarea id="import-area" rows="12" spellcheck="false" placeholder='{"name":"张三",...}'></textarea>
   <div class="dialog-actions">
-    <button onclick="document.getElementById('dlg-import').close()">取消</button>
+    <button type="button" data-close="dlg-import">取消</button>
     <button id="btn-do-import" class="btn-primary">导入</button>
   </div>
 </dialog>
@@ -310,7 +461,7 @@
   <div class="dialog-actions">
     <button id="btn-copy-json">复制到剪贴板</button>
     <button id="btn-download-json" class="btn-primary">下载文件</button>
-    <button onclick="document.getElementById('dlg-export').close()">关闭</button>
+    <button type="button" data-close="dlg-export">关闭</button>
   </div>
 </dialog>
 

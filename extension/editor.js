@@ -1,12 +1,19 @@
-/* 职聘通·网申助手 — 全页画像编辑器 v2.2
+/* 职聘通·网申助手 — 全页画像编辑器 v2.6
  * 功能：
  * 1. 从 chrome.storage.local 加载/保存画像
  * 2. 结构化表单双向绑定（输入即更新）
- * 3. 动态数组行（实习/校园/获奖/项目/论文/志愿/家庭）
- * 4. 从网站导入（注入读取 localStorage）
- * 5. JSON 导入/导出
- * 6. 侧边栏滚动联动
- * 7. 自动保存提示
+ * 3. 动态数组行（实习/科研/竞赛/校园/获奖/项目/论文/志愿/家庭），可整块删空
+ * 4. 语言能力下拉（无/其他/自定义补充说明）
+ * 5. 从网站导入（注入读取 localStorage）
+ * 6. JSON 导入/导出
+ * 7. 侧边栏滚动联动
+ * 8. 自动保存提示
+ * v2.6：新增科研经历/竞赛经历数组；实习经历增加离职原因/薪资/证明人字段；
+ *       家庭信息独立为单独分区，增加年龄/政治面貌/联系电话字段；
+ *       基本信息新增国籍/证件类型/出生地/血型/独生子女；
+ *       教育背景新增班级/学号/学制/学习形式/学校层次/专业类别/录取批次/第一学历/院校所在地；
+ *       联系方式新增QQ/博客/LinkedIn/GitHub/家庭电话；
+ *       求职意向新增期望行业/期望职能/接受出差/接受外派
  */
 
 const LS_KEY = 'jh.profile.v2';
@@ -48,6 +55,30 @@ async function loadProfile() {
 }
 
 /* ========== 表单渲染 ========== */
+/* 这些 select 字段带「其他/需补充」自定义输入框 */
+const CUSTOM_SELECT_KEYS = ['english', 'otherLang', 'computerLevel', 'mandarin'];
+
+const ARRAY_NAMES = {
+  experiences: '实习/工作经历',
+  research: '科研经历',
+  competitions: '竞赛经历',
+  campus: '校园经历',
+  awards: '获奖经历',
+  projects: '项目经历',
+  papers: '论文/著作',
+  volunteer: '志愿服务经历',
+  family: '家庭信息',
+};
+
+/* select 选中项需要补充说明时，显示旁边的自定义输入框 */
+function syncExtVisibility(key) {
+  const sel = document.querySelector(`select[data-key="${key}"]`);
+  const wrap = document.querySelector(`[data-ext-wrap="${key}"]`);
+  if (!sel || !wrap) return;
+  const opt = sel.selectedOptions[0];
+  wrap.hidden = !(opt && opt.hasAttribute('data-ext'));
+}
+
 function renderForm(profile) {
   // 简单字段：遍历所有 [data-key] 元素
   $$('[data-key]').forEach(el => {
@@ -55,22 +86,48 @@ function renderForm(profile) {
     let val = profile[key];
     if (Array.isArray(val)) val = val.join('、');
     if (val === undefined || val === null) val = '';
-    el.value = val;
+
+    if (el.tagName === 'SELECT' && CUSTOM_SELECT_KEYS.includes(key)) {
+      const inOptions = Array.from(el.options).some(o => (o.value || o.text) === String(val));
+      if (val && !inOptions) {
+        // 值不在预置选项（如"雅思7.5"）→ 选「其他」，原值放自定义框
+        const otherOpt = Array.from(el.options).find(o => o.text === '其他');
+        if (otherOpt) el.value = otherOpt.value;
+        const custom = document.querySelector(`[data-custom="${key}"]`);
+        if (custom) custom.value = val;
+      } else {
+        el.value = val;
+        const custom = document.querySelector(`[data-custom="${key}"]`);
+        if (custom) custom.value = '';
+      }
+      syncExtVisibility(key);
+    } else {
+      el.value = val;
+    }
   });
 
-  // 动态数组
-  const arrays = ['experiences', 'campus', 'awards', 'projects', 'papers', 'volunteer', 'family'];
-  arrays.forEach(key => {
+  // 动态数组（没有的经历整块留空，不再强制补一行）
+  const arrays = ['experiences', 'research', 'competitions', 'campus', 'awards', 'projects', 'papers', 'volunteer', 'family'];
+    arrays.forEach(key => {
     const arr = Array.isArray(profile[key]) ? profile[key] : [];
     const container = $('#rows-' + key);
     if (!container) return;
     container.innerHTML = '';
     if (arr.length === 0) {
-      addRow(key); // 至少一行空行
+      renderEmptyState(container, key);
     } else {
       arr.forEach(item => addRow(key, item));
     }
   });
+}
+
+/* 空板块占位提示 */
+function renderEmptyState(container, key) {
+  const div = document.createElement('div');
+  div.className = 'empty-hint';
+  const name = ARRAY_NAMES[key] || '内容';
+  div.textContent = `暂无${name} — 没有就保持空白（填网页时会自动填「无」），点上方「+ 添加」可新增`;
+  container.appendChild(div);
 }
 
 /* ========== 动态行管理 ========== */
@@ -78,6 +135,10 @@ function addRow(arrayKey, data) {
   const container = $('#rows-' + arrayKey);
   const tpl = $('#tpl-' + arrayKey);
   if (!container || !tpl) return;
+
+  // 去掉空状态提示
+  const hint = container.querySelector('.empty-hint');
+  if (hint) hint.remove();
 
   const clone = tpl.content.cloneNode(true);
   const row = clone.querySelector('.exp-row');
@@ -96,17 +157,22 @@ function addRow(arrayKey, data) {
     el.addEventListener('input', () => { isDirty = true; updateSaveStatus(true); });
   });
 
+  // 自动聚焦第一个空输入框
+  const first = row.querySelector('input');
+  if (first) first.focus();
+
   return row;
 }
 
 function removeRow(btn) {
   const row = btn.closest('.exp-row');
   const container = row.parentElement;
+  const block = container.closest('[data-array-key]');
+  const key = block ? block.dataset.arrayKey : '';
   row.remove();
-  // 如果删到 0 行，补一行空行
+  // 删到 0 行：显示空状态提示，不再强制补空行
   if (container.children.length === 0) {
-    const key = container.closest('[data-array-key]').dataset.arrayKey;
-    addRow(key);
+    renderEmptyState(container, key);
   }
   isDirty = true;
   updateSaveStatus(true);
@@ -120,6 +186,17 @@ function collectProfile() {
   $$('[data-key]').forEach(el => {
     const key = el.dataset.key;
     let val = el.value.trim();
+
+    // 带「其他/需补充」的 select：合并自定义输入框的值
+    if (el.tagName === 'SELECT' && CUSTOM_SELECT_KEYS.includes(key)) {
+      const opt = el.selectedOptions[0];
+      const custom = document.querySelector(`[data-custom="${key}"]`);
+      const cv = custom ? custom.value.trim() : '';
+      if (opt && opt.hasAttribute('data-ext') && cv) {
+        val = (opt.text === '其他') ? cv : opt.text + cv; // 雅思+7.5=雅思7.5；其他→直接用自定义值
+      }
+    }
+
     // certs/skills 是逗号分隔 → 数组
     if ((key === 'certs' || key === 'skills') && val) {
       p[key] = val.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
@@ -129,7 +206,7 @@ function collectProfile() {
   });
 
   // 动态数组
-  const arrays = ['experiences', 'campus', 'awards', 'projects', 'papers', 'volunteer', 'family'];
+  const arrays = ['experiences', 'research', 'competitions', 'campus', 'awards', 'projects', 'papers', 'volunteer', 'family'];
   arrays.forEach(key => {
     const container = $('#rows-' + key);
     if (!container) return;
@@ -287,7 +364,7 @@ function setupScrollSpy() {
 /* ========== 自动保存提示 ========== */
 function setupDirtyTracking() {
   document.addEventListener('input', (e) => {
-    if (e.target.matches('[data-key], [data-field]')) {
+    if (e.target.matches('[data-key], [data-field], [data-custom]')) {
       isDirty = true;
       updateSaveStatus(true);
     }
@@ -301,14 +378,58 @@ function setupDirtyTracking() {
   });
 }
 
+/* ========== 事件委托（MV3 CSP 禁止内联 onclick，统一在此绑定） ========== */
+function setupDelegatedClicks() {
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    // 添加动态行
+    const addBtn = t.closest('[data-add]');
+    if (addBtn) {
+      addRow(addBtn.dataset.add);
+      isDirty = true;
+      updateSaveStatus(true);
+      return;
+    }
+    // 删除动态行
+    const delBtn = t.closest('[data-del]');
+    if (delBtn) {
+      removeRow(delBtn);
+      return;
+    }
+    // 关闭对话框
+    const closeBtn = t.closest('[data-close]');
+    if (closeBtn) {
+      const dlg = document.getElementById(closeBtn.dataset.close);
+      if (dlg && typeof dlg.close === 'function') dlg.close();
+    }
+  });
+}
+
+/* ========== 载入示例画像（手动触发，不再自动填充） ========== */
+async function loadExample() {
+  try {
+    const resp = await fetch(chrome.runtime.getURL('profile.example.json'));
+    if (!resp.ok) return;
+    const example = await resp.json();
+    delete example._comment;
+    currentProfile = example;
+    renderForm(example);
+    isDirty = true;
+    updateSaveStatus(true);
+    showToast('已载入示例画像，请修改后保存', 'ok');
+  } catch (_) { showToast('载入示例失败', 'err'); }
+}
+
 /* ========== 初始化 ========== */
 document.addEventListener('DOMContentLoaded', async () => {
   await loadProfile();
   setupScrollSpy();
   setupDirtyTracking();
+  setupDelegatedClicks();
 
   $('#btn-save').addEventListener('click', saveProfile);
   $('#btn-save-2').addEventListener('click', saveProfile);
+  $('#btn-example').addEventListener('click', loadExample);
   $('#btn-import-site').addEventListener('click', importFromSite);
   $('#btn-import-json').addEventListener('click', openImportDialog);
   $('#btn-do-import').addEventListener('click', doImport);
@@ -317,20 +438,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('#btn-download-json').addEventListener('click', downloadJSON);
   $('#btn-reset').addEventListener('click', resetProfile);
 
-  // 如果画像为空（首次使用），自动填充示例数据
-  if (!currentProfile.name) {
-    try {
-      const resp = await fetch(chrome.runtime.getURL('profile.example.json'));
-      if (resp.ok) {
-        const example = await resp.json();
-        // 去掉 _comment 字段
-        delete example._comment;
-        currentProfile = example;
-        renderForm(example);
+  // 语言能力 select：切换选项时联动自定义输入框
+  CUSTOM_SELECT_KEYS.forEach(key => {
+    const sel = document.querySelector(`select[data-key="${key}"]`);
+    if (sel) {
+      sel.addEventListener('change', () => {
+        syncExtVisibility(key);
         isDirty = true;
         updateSaveStatus(true);
-        showToast('首次使用已加载示例画像，请修改后保存', 'ok');
-      }
-    } catch (_) { /* 静默失败 */ }
+      });
+    }
+  });
+
+  // 首次使用：表单留空 + 引导提示（不自动塞示例数据）
+  if (!currentProfile.name) {
+    showToast('表单已留空，按需填写即可；可点右上「📋 载入示例」参考格式', 'ok');
   }
 });

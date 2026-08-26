@@ -136,3 +136,17 @@ header {
   font-size: 11px; color: var(--sub); margin: 6px 0;
   background: var(--primary-weak); border-radius: 6px; padding: 4px 8px;
 }
+
+/* ========== v2.4：空缺填无开关 ========== */
+.opt-row {
+  display: flex; align-items: center; gap: 7px; cursor: pointer;
+  margin: 8px 0 2px; padding: 8px 10px;
+  background: rgba(115,66,226,.05); border: 1px solid rgba(115,66,226,.16);
+  border-radius: 10px; font-size: 11.5px; color: var(--text, #2b2620);
+  user-select: none; transition: .15s ease-out;
+}
+.opt-row:hover { background: rgba(115,66,226,.09); }
+.opt-row input[type="checkbox"] {
+  accent-color: #7342E2; width: 14px; height: 14px; cursor: pointer; flex-shrink: 0;
+}
+.opt-row span { line-height: 1.4; }

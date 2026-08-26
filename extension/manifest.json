@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "职聘通·网申助手",
-  "version": "2.2.0",
+  "version": "2.6.0",
   "description": "在任意企业官网投递页一键自动填写个人信息。支持 Chrome、Edge 等 Chromium 内核浏览器。可搭配职聘通网站使用，也可独立填写画像。数据仅存本地，不上传。",
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
