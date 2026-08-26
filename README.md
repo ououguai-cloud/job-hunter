@@ -8,7 +8,7 @@
 ![Jobs](https://img.shields.io/badge/%E5%B2%97%E4%BD%8D%E5%BA%93-38333%20%E6%9D%A1%20%C2%B7%2010737%20%E5%AE%B6%E5%85%AC%E5%8F%B8-purple.svg)
 ![Tests](https://img.shields.io/badge/E2E%20%E6%B5%8B%E8%AF%95-153%2F153%20%E9%80%9A%E8%BF%87-brightgreen.svg)
 
-**在线演示（静态模式）**：<https://c329ea2a803b444aa354de1a9acc95b2.app.workbuddy.link> —— 简历分析 / 岗位推荐 / 公司筛选（岗位大类→细分、公司类型二级、笔试要求、发布状态） / 投递看板可直接体验（数据存于浏览器本地）；「智能投递」自动化引擎需 Node 服务，请按下方快速开始在本地部署完整版。
+**在线演示（静态模式）**：<https://ououguai-cloud.github.io/job-hunter/> —— 简历分析 / 岗位推荐 / 公司筛选（岗位大类→细分、公司类型二级、笔试要求、发布状态） / 投递看板可直接体验（数据存于浏览器本地）；「智能投递」自动化引擎需 Node 服务，请按下方快速开始在本地部署完整版。
 
 ---
 
